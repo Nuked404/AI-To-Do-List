@@ -67,7 +67,7 @@ export class PopupManager {
       } else {
         await this.taskManager.addTask(task);
       }
-      await this.taskManager.fetchTasks(); // Refresh after submission
+      await this.taskManager.fetchTasks();
       this.taskRenderer.render();
       this.hidePopup();
     }

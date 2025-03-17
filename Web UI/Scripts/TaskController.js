@@ -59,19 +59,20 @@ export class TaskController {
   async editTask(taskId) {
     const task = this.taskManager.tasks.find((t) => t.id === taskId);
     this.popupManager.showPopup("Edit Task", task, taskId);
+    // Rendering happens in PopupManager.submitTask
   }
 
   async deleteTask(taskId) {
     if (confirm("Are you sure you want to delete this task?")) {
       await this.taskManager.deleteTask(taskId);
-      await this.taskManager.fetchTasks(); // Refresh task list
-      this.taskRenderer.render(); // Re-render UI
+      await this.taskManager.fetchTasks();
+      this.taskRenderer.render();
     }
   }
 
   async toggleComplete(taskId) {
     await this.taskManager.toggleComplete(taskId);
-    await this.taskManager.fetchTasks(); // Refresh task list
-    this.taskRenderer.render(); // Re-render UI
+    await this.taskManager.fetchTasks();
+    this.taskRenderer.render();
   }
 }

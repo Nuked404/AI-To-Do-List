@@ -2,15 +2,14 @@ export class TaskManager {
   constructor() {
     this.tasks = [];
     this.userId = localStorage.getItem("user_id");
-    this.fetchTasks();
+    this.fetchTasks(); // Initial fetch, rendering handled elsewhere
   }
 
   async fetchTasks() {
     const response = await fetch(`http://localhost:8000/tasks/${this.userId}`);
     this.tasks = await response.json();
     console.log("Tasks after fetch:", this.tasks);
-    window.taskRenderer.render(); // Add this
-    return this.tasks;
+    return this.tasks; // Return for chaining in TaskController
   }
 
   async addTask(task) {
@@ -21,7 +20,6 @@ export class TaskManager {
     });
     const newTask = await response.json();
     this.tasks.push(newTask);
-    window.taskRenderer.render(); // Add this
     return newTask;
   }
 
@@ -34,7 +32,6 @@ export class TaskManager {
     const updatedTask = await response.json();
     const index = this.tasks.findIndex((t) => t.id === taskId);
     this.tasks[index] = updatedTask;
-    window.taskRenderer.render(); // Add this
     return updatedTask;
   }
 

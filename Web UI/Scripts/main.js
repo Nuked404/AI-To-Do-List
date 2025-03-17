@@ -14,10 +14,13 @@ const taskController = new TaskController(
   taskRenderer,
   popupManager
 );
-window.taskController = taskController; // Expose globally
-window.taskRenderer = taskRenderer; // Expose globally
+
+window.taskController = taskController; // Expose globally for HTML event handlers
+window.taskRenderer = taskRenderer; // Expose globally if still needed
 
 new ThemeManager();
 new AISuggestionManager();
 new SidebarManager();
-taskRenderer.render();
+
+// Initial render after tasks are fetched
+taskManager.fetchTasks().then(() => taskRenderer.render());

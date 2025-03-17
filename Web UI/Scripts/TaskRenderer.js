@@ -9,14 +9,22 @@ export class TaskRenderer {
     this.highCountElement = document.getElementById("highCount");
     this.normalCountElement = document.getElementById("normalCount");
     this.lowCountElement = document.getElementById("lowCount");
+    // Reference the section containers
+    this.criticalSection =
+      document.querySelector("#criticalTasks").parentElement;
+    this.highSection = document.querySelector("#highTasks").parentElement;
+    this.normalSection = document.querySelector("#normalTasks").parentElement;
+    this.lowSection = document.querySelector("#lowTasks").parentElement;
   }
 
   render() {
+    // Clear existing content
     this.criticalTasksElement.innerHTML = "";
     this.highTasksElement.innerHTML = "";
     this.normalTasksElement.innerHTML = "";
     this.lowTasksElement.innerHTML = "";
 
+    // Filter tasks by priority
     const criticalTasks = this.taskManager.tasks.filter(
       (t) => t.priority === "Critical"
     );
@@ -28,31 +36,47 @@ export class TaskRenderer {
     );
     const lowTasks = this.taskManager.tasks.filter((t) => t.priority === "Low");
 
-    criticalTasks.forEach((task, index) => {
-      this.criticalTasksElement.appendChild(
-        this.createTaskCard(task, index, criticalTasks.length)
-      );
-    });
-    highTasks.forEach((task, index) => {
-      this.highTasksElement.appendChild(
-        this.createTaskCard(task, index, highTasks.length)
-      );
-    });
-    normalTasks.forEach((task, index) => {
-      this.normalTasksElement.appendChild(
-        this.createTaskCard(task, index, normalTasks.length)
-      );
-    });
-    lowTasks.forEach((task, index) => {
-      this.lowTasksElement.appendChild(
-        this.createTaskCard(task, index, lowTasks.length)
-      );
-    });
+    // Toggle visibility and render tasks for each section
+    this.renderSection(
+      criticalTasks,
+      this.criticalSection,
+      this.criticalTasksElement,
+      this.criticalCountElement
+    );
+    this.renderSection(
+      highTasks,
+      this.highSection,
+      this.highTasksElement,
+      this.highCountElement
+    );
+    this.renderSection(
+      normalTasks,
+      this.normalSection,
+      this.normalTasksElement,
+      this.normalCountElement
+    );
+    this.renderSection(
+      lowTasks,
+      this.lowSection,
+      this.lowTasksElement,
+      this.lowCountElement
+    );
+  }
 
-    this.criticalCountElement.textContent = criticalTasks.length;
-    this.highCountElement.textContent = highTasks.length;
-    this.normalCountElement.textContent = normalTasks.length;
-    this.lowCountElement.textContent = lowTasks.length;
+  renderSection(tasks, sectionElement, taskListElement, countElement) {
+    if (tasks.length > 0) {
+      // Show section and render tasks
+      sectionElement.style.display = "block";
+      tasks.forEach((task, index) => {
+        taskListElement.appendChild(
+          this.createTaskCard(task, index, tasks.length)
+        );
+      });
+      countElement.textContent = tasks.length;
+    } else {
+      // Hide section if no tasks
+      sectionElement.style.display = "none";
+    }
   }
 
   createTaskCard(task, index, sectionLength) {

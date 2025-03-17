@@ -1,0 +1,36 @@
+import { ThemeManager } from "./ThemeManager.js";
+
+class LoginManager {
+  constructor() {
+    new ThemeManager();
+    document
+      .getElementById("loginForm")
+      .addEventListener("submit", (e) => this.handleLogin(e));
+  }
+
+  async handleLogin(e) {
+    e.preventDefault();
+    const email = document.getElementById("loginEmail").value;
+    const password = document.getElementById("loginPassword").value;
+
+    try {
+      const response = await fetch("http://localhost:8000/users/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+      const data = await response.json();
+      if (response.ok) {
+        localStorage.setItem("user_id", data.user_id);
+        window.location.href = "index.html";
+      } else {
+        alert(data.detail);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("An error occurred");
+    }
+  }
+}
+
+new LoginManager();

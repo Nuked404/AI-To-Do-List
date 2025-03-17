@@ -1,82 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register - Task Manager</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="CSS/styles.css">
-    <link rel="stylesheet" href="CSS/auth.css">
-</head>
-<body>
-    <div class="container-fluid d-flex justify-content-center align-items-center min-vh-100">
-        <div class="register-card task-card">
-            <h2>Register</h2>
-            <form id="registerForm">
-                <input type="text" id="registerUsername" placeholder="Username" class="form-input" required>
-                <input type="email" id="registerEmail" placeholder="Email" class="form-input" required>
-                <input type="password" id="registerPassword" placeholder="Password" class="form-input" required>
-                <input type="password" id="registerConfirmPassword" placeholder="Confirm Password" class="form-input" required>
-                <button type="submit" class="btn w-100">Register</button>
-            </form>
-            <p class="text-center mt-3">Already have an account? <a href="login.html" class="link">Login</a></p>
-            <div class="theme-toggle mt-3 mx-auto" id="themeToggle"></div>
-        </div>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="CSS/styles.css" />
+    <link rel="stylesheet" href="CSS/auth.css" />
+  </head>
+  <body>
+    <div
+      class="container-fluid d-flex justify-content-center align-items-center min-vh-100"
+    >
+      <div class="register-card task-card">
+        <h2>Register</h2>
+        <form id="registerForm">
+          <input
+            type="text"
+            id="registerUsername"
+            placeholder="Username"
+            class="form-input"
+            required
+          />
+          <input
+            type="email"
+            id="registerEmail"
+            placeholder="Email"
+            class="form-input"
+            required
+          />
+          <input
+            type="password"
+            id="registerPassword"
+            placeholder="Password"
+            class="form-input"
+            required
+          />
+          <input
+            type="password"
+            id="registerConfirmPassword"
+            placeholder="Confirm Password"
+            class="form-input"
+            required
+          />
+          <button type="submit" class="btn w-100">Register</button>
+        </form>
+        <p class="text-center mt-3">
+          Already have an account? <a href="login.html" class="link">Login</a>
+        </p>
+        <div class="theme-toggle mt-3 mx-auto" id="themeToggle"></div>
+      </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-    <script>
-    class ThemeManager {
-        constructor() {
-            this.themeToggle = document.getElementById('themeToggle');
-            this.themeToggle.addEventListener('click', () => this.toggleTheme());
-            this.loadTheme();
-        }
-
-        toggleTheme() {
-            document.body.classList.toggle('dark-theme');
-            localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
-        }
-
-        loadTheme() {
-            if (localStorage.getItem('theme') === 'dark') {
-                document.body.classList.add('dark-theme');
-            }
-        }
-    }
-
-    new ThemeManager();
-
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const username = document.getElementById('registerUsername').value;
-        const email = document.getElementById('registerEmail').value;
-        const password = document.getElementById('registerPassword').value;
-        const confirmPassword = document.getElementById('registerConfirmPassword').value;
-
-        if (password !== confirmPassword) {
-            alert('Passwords do not match!');
-            return;
-        }
-
-        try {
-            const response = await fetch('http://localhost:8000/users/register', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name: username, email, password })
-            });
-            const data = await response.json();
-            if (response.ok) {
-                window.location.href = 'login.html';
-            } else {
-                alert(data.detail || 'Registration failed');
-            }
-        } catch (error) {
-            console.error('Register error:', error);
-            alert('An error occurred');
-        }
-    });
-    </script>
-</body>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script type="module" src="Scripts/RegisterManager.js"></script>
+  </body>
 </html>

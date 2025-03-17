@@ -604,26 +604,31 @@ body.dark-theme .btn-group .btn.active {
 }
 
 .suggest-btn-container {
-    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px; /* Space between buttons */
+    margin-bottom: 15px;
 }
-
+  
 .suggestion-output {
     background: rgba(255, 255, 255, 0.5);
     padding: 15px;
     border-radius: 10px;
     font-size: 14px;
-    color: #475569;
+    color: #475569; /* Neutral gray for light theme */
     min-height: 50px;
     max-height: 150px;
     overflow-y: auto;
     word-wrap: break-word;
     text-align: left;
     border: 1px solid rgba(0, 0, 0, 0.1);
+    display: none; /* Hidden by default */
+    margin-bottom: 10px;
 }
-
+  
 body.dark-theme .suggestion-output {
     background: rgba(71, 85, 105, 0.5);
-    color: #cbd5e1;
+    color: #cbd5e1; /* Light gray for dark theme */
     border: 1px solid rgba(255, 255, 255, 0.2);
 }
 

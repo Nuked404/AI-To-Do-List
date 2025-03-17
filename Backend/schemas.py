@@ -38,8 +38,8 @@ class TaskPositionUpdate(BaseModel):
     position: int
 
 class UserDataBase(BaseModel):
-    current_mood: str
-    current_energy: str
+    current_mood: Optional[str] = None  
+    current_energy: Optional[str] = None 
 
 class UserDataCreate(UserDataBase):
     pass

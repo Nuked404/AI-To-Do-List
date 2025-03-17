@@ -23,3 +23,10 @@ def login_user(login_data: schemas.UserLogin, db: Session = Depends(get_db)):
     if not user or not auth.verify_password(login_data.password, user.passhash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     return {"user_id": user.id, "message": "Login successful"}
+
+@router.get("/{user_id}", response_model=schemas.User)
+def get_user(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user

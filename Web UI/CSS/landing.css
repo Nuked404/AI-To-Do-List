@@ -1,0 +1,117 @@
+.landing-container {
+    min-height: 100vh;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.futuristic-title {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1e3a8a;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    animation: glow 2s infinite alternate;
+}
+
+body.dark-theme .futuristic-title {
+    color: #93c5fd;
+}
+
+.futuristic-subtitle {
+    font-size: 28px;
+    color: #1e3a8a;
+    font-weight: 600;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    animation: slideIn 1s ease-out;
+}
+
+body.dark-theme .futuristic-subtitle {
+    color: #93c5fd;
+}
+
+.landing-content {
+    padding: 50px 20px;
+}
+
+.lead {
+    font-size: 18px;
+    color: #475569;
+    max-width: 600px;
+    margin: 0 auto 30px;
+}
+
+body.dark-theme .lead {
+    color: #cbd5e1;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.feature-card {
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card i {
+    color: #1e3a8a;
+}
+
+body.dark-theme .feature-card i {
+    color: #93c5fd;
+}
+
+.feature-card:hover {
+    transform: translateY(-10px) scale(1.05);
+    box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+}
+
+body.dark-theme .feature-card:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+}
+
+.get-started-btn {
+    padding: 15px 30px;
+    font-size: 16px;
+    background: linear-gradient(135deg, #1e3a8a, #1e40af);
+    box-shadow: 0 6px 20px rgba(30, 64, 175, 0.4);
+}
+
+body.dark-theme .get-started-btn {
+    background: linear-gradient(135deg, #93c5fd, #60a5fa);
+    box-shadow: 0 6px 20px rgba(147, 197, 253, 0.4);
+}
+
+.get-started-btn:hover {
+    background: linear-gradient(135deg, #1e40af, #1e3a8a);
+}
+
+body.dark-theme .get-started-btn:hover {
+    background: linear-gradient(135deg, #60a5fa, #93c5fd);
+}
+
+/* Animations for futuristic feel */
+@keyframes glow {
+    0% { text-shadow: 0 0 5px rgba(30, 64, 175, 0.5); }
+    100% { text-shadow: 0 0 15px rgba(30, 64, 175, 0.8); }
+}
+
+body.dark-theme .futuristic-title {
+    animation: glow-dark 2s infinite alternate;
+}
+
+@keyframes glow-dark {
+    0% { text-shadow: 0 0 5px rgba(147, 197, 253, 0.5); }
+    100% { text-shadow: 0 0 15px rgba(147, 197, 253, 0.8); }
+}
+
+@keyframes slideIn {
+    from { transform: translateY(50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}

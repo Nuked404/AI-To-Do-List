@@ -1,0 +1,45 @@
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    padding: 30px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.8);
+    transition: border-color 0.3s ease;
+}
+
+body.dark-theme .form-input {
+    background: #334155;
+    border-color: #475569;
+    color: #e2e8f0;
+}
+
+.form-input:focus {
+    outline: none;
+    border-color: #1e3a8a;
+}
+
+body.dark-theme .form-input:focus {
+    border-color: #93c5fd;
+}
+
+.link {
+    color: #1e3a8a;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+body.dark-theme .link {
+    color: #93c5fd;
+}
+
+.link:hover {
+    text-decoration: underline;
+}

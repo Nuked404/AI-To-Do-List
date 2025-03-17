@@ -34,6 +34,7 @@ export class TaskManager {
     const updatedTask = await response.json();
     const index = this.tasks.findIndex((t) => t.id === taskId);
     this.tasks[index] = updatedTask;
+    window.taskRenderer.render(); // Add this
     return updatedTask;
   }
 

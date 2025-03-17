@@ -21,7 +21,7 @@ class TaskBase(BaseModel):
     priority: str
     status: str
     due_date: Optional[datetime] = None
-    position: int = 0  
+    # position: int = 0  
 
 class TaskCreate(TaskBase):
     pass
@@ -30,8 +30,12 @@ class Task(TaskBase):
     id: int
     owner_id: int
     created_at: datetime
+    position: int
     class Config:
         from_attributes = True
+        
+class TaskPositionUpdate(BaseModel):
+    position: int
 
 class UserDataBase(BaseModel):
     current_mood: str

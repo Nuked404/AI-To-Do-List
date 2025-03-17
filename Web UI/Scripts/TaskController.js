@@ -6,23 +6,24 @@ export class TaskController {
   }
 
   async moveToTop(taskId) {
-    const task = this.taskManager.tasks.find((t) => t.id === taskId);
     await this.updatePosition(taskId, 0);
+    await this.taskManager.fetchTasks();
+    this.taskRenderer.render();
   }
 
   async moveUp(taskId) {
     const task = this.taskManager.tasks.find((t) => t.id === taskId);
-    const sectionTasks = this.taskManager.tasks.filter(
-      (t) => t.priority === task.priority
-    );
-    const index = sectionTasks.findIndex((t) => t.id === taskId);
-    if (index > 0) {
-      await this.updatePosition(taskId, sectionTasks[index - 1].position - 1);
+    if (task.position > 0) {
+      await this.updatePosition(taskId, task.position - 1);
+      await this.taskManager.fetchTasks();
+      this.taskRenderer.render();
     }
   }
 
   async moveToPosition(taskId, position) {
     await this.updatePosition(taskId, parseInt(position));
+    await this.taskManager.fetchTasks();
+    this.taskRenderer.render();
   }
 
   async moveDown(taskId) {
@@ -30,9 +31,10 @@ export class TaskController {
     const sectionTasks = this.taskManager.tasks.filter(
       (t) => t.priority === task.priority
     );
-    const index = sectionTasks.findIndex((t) => t.id === taskId);
-    if (index < sectionTasks.length - 1) {
-      await this.updatePosition(taskId, sectionTasks[index + 1].position + 1);
+    if (task.position < sectionTasks.length - 1) {
+      await this.updatePosition(taskId, task.position + 1);
+      await this.taskManager.fetchTasks();
+      this.taskRenderer.render();
     }
   }
 
@@ -41,31 +43,35 @@ export class TaskController {
     const sectionTasks = this.taskManager.tasks.filter(
       (t) => t.priority === task.priority
     );
-    const maxPosition = Math.max(...sectionTasks.map((t) => t.position));
-    await this.updatePosition(taskId, maxPosition + 1);
+    await this.updatePosition(taskId, sectionTasks.length - 1);
+    await this.taskManager.fetchTasks();
+    this.taskRenderer.render();
   }
 
   async updatePosition(taskId, position) {
     await fetch(`http://localhost:8000/tasks/position/${taskId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ position }),
+      body: JSON.stringify({ position: position }),
     });
-    await this.taskManager.fetchTasks();
   }
 
-  editTask(taskId) {
+  async editTask(taskId) {
     const task = this.taskManager.tasks.find((t) => t.id === taskId);
     this.popupManager.showPopup("Edit Task", task, taskId);
   }
 
-  deleteTask(taskId) {
+  async deleteTask(taskId) {
     if (confirm("Are you sure you want to delete this task?")) {
-      this.taskManager.deleteTask(taskId);
+      await this.taskManager.deleteTask(taskId);
+      await this.taskManager.fetchTasks(); // Refresh task list
+      this.taskRenderer.render(); // Re-render UI
     }
   }
 
-  toggleComplete(taskId) {
-    this.taskManager.toggleComplete(taskId);
+  async toggleComplete(taskId) {
+    await this.taskManager.toggleComplete(taskId);
+    await this.taskManager.fetchTasks(); // Refresh task list
+    this.taskRenderer.render(); // Re-render UI
   }
 }

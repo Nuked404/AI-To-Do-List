@@ -18,14 +18,30 @@ export class PopupManager {
 
   showPopup(title, task = null, taskId = null) {
     this.popupTitle.textContent = title;
-    document.getElementById("taskTitle").value = task?.title || "";
-    document.getElementById("taskType").value = task?.task_type || "Mental";
-    document.getElementById("taskETATime").value = task?.eta_time || "";
-    document.getElementById("taskPriority").value = task?.priority || "Normal";
-    document.getElementById("taskStatus").value = task?.status || "Pending";
-    document.getElementById("taskDueDate").value = task?.due_date || "";
-    this.submitTaskBtn.textContent = task ? "Update Task" : "Add Task";
-    this.editingId = taskId;
+    const taskTitle = document.getElementById("taskTitle");
+    const taskType = document.getElementById("taskType");
+    const taskETATime = document.getElementById("taskETATime");
+    const taskPriority = document.getElementById("taskPriority");
+    const taskDueDate = document.getElementById("taskDueDate");
+
+    if (task) {
+      taskTitle.value = task.title || "";
+      taskType.value = task.task_type || "Mental";
+      taskETATime.value = task.eta_time || "";
+      taskPriority.value = task.priority || "Normal";
+      taskDueDate.value = task.due_date ? task.due_date.split("T")[0] : "";
+      this.editingId = taskId;
+      this.submitTaskBtn.textContent = "Update Task";
+    } else {
+      taskTitle.value = "";
+      taskType.value = "Mental";
+      taskETATime.value = "";
+      taskPriority.value = "Normal";
+      taskDueDate.value = new Date().toISOString().split("T")[0];
+      this.editingId = null;
+      this.submitTaskBtn.textContent = "Add Task";
+    }
+
     this.popup.style.display = "block";
     this.overlay.style.display = "block";
   }
@@ -38,16 +54,10 @@ export class PopupManager {
   async submitTask() {
     const task = {
       title: document.getElementById("taskTitle").value,
-      task_type:
-        document.getElementById("taskType").value.charAt(0).toUpperCase() +
-        document.getElementById("taskType").value.slice(1), // "physical" -> "Physical"
+      task_type: document.getElementById("taskType").value,
       eta_time: document.getElementById("taskETATime").value,
-      priority:
-        document.getElementById("taskPriority").value.charAt(0).toUpperCase() +
-        document.getElementById("taskPriority").value.slice(1), // "normal" -> "Normal"
-      status:
-        document.getElementById("taskStatus").value.charAt(0).toUpperCase() +
-        document.getElementById("taskStatus").value.slice(1), // "pending" -> "Pending"
+      priority: document.getElementById("taskPriority").value,
+      status: "Pending", // Always Pending for new tasks
       due_date: document.getElementById("taskDueDate").value || null,
     };
 
@@ -57,6 +67,8 @@ export class PopupManager {
       } else {
         await this.taskManager.addTask(task);
       }
+      await this.taskManager.fetchTasks(); // Refresh after submission
+      this.taskRenderer.render();
       this.hidePopup();
     }
   }

@@ -33,19 +33,16 @@ export class TaskRenderer {
         this.createTaskCard(task, index, criticalTasks.length)
       );
     });
-
     highTasks.forEach((task, index) => {
       this.highTasksElement.appendChild(
         this.createTaskCard(task, index, highTasks.length)
       );
     });
-
     normalTasks.forEach((task, index) => {
       this.normalTasksElement.appendChild(
         this.createTaskCard(task, index, normalTasks.length)
       );
     });
-
     lowTasks.forEach((task, index) => {
       this.lowTasksElement.appendChild(
         this.createTaskCard(task, index, lowTasks.length)
@@ -62,54 +59,50 @@ export class TaskRenderer {
     const taskCard = document.createElement("div");
     taskCard.classList.add("task-card");
     taskCard.innerHTML = `
-          <div class="control-sleeve">
-              <button class="control-btn to-top" onclick="taskController.moveToTop(${
-                task.id
-              })"><i class="fas fa-step-backward"></i></button>
-              <button class="control-btn up" onclick="taskController.moveUp(${
-                task.id
-              })"><i class="fas fa-play"></i></button>
-              <input type="number" class="position-input" value="${
-                task.position
-              }" min="1" max="${sectionLength}" onchange="taskController.moveToPosition(${
-      task.id
-    }, this.value)">
-              <button class="control-btn down" onclick="taskController.moveDown(${
-                task.id
-              })"><i class="fas fa-play"></i></button>
-              <button class="control-btn to-bottom" onclick="taskController.moveToBottom(${
-                task.id
-              })"><i class="fas fa-step-forward"></i></button>
-          </div>
-          ${
-            task.priority === "Critical"
-              ? '<div class="critical-indicator"></div>'
-              : ""
-          }
-          <h3>${task.title}</h3>
-          <p>Type: ${task.task_type} | ETA: ${task.eta_time}</p>
-          <div class="due-date">Due: ${task.due_date || "No due date"}</div>
-          <span class="task-status status-${task.status.toLowerCase()}">${
+      <div class="control-sleeve">
+        <button class="control-btn to-top" onclick="taskController.moveToTop(${
+          task.id
+        })"><i class="fas fa-step-backward"></i></button>
+        <button class="control-btn up" onclick="taskController.moveUp(${
+          task.id
+        })"><i class="fas fa-play"></i></button>
+        <input type="number" class="position-input" value="${
+          task.position
+        }" min="0" max="${
+      sectionLength - 1
+    }" onchange="taskController.moveToPosition(${task.id}, this.value)">
+        <button class="control-btn down" onclick="taskController.moveDown(${
+          task.id
+        })"><i class="fas fa-play"></i></button>
+        <button class="control-btn to-bottom" onclick="taskController.moveToBottom(${
+          task.id
+        })"><i class="fas fa-step-forward"></i></button>
+      </div>
+      ${
+        task.priority === "Critical"
+          ? '<div class="critical-indicator"></div>'
+          : ""
+      }
+      <h3>${task.title}</h3>
+      <p>Type: ${task.task_type} | ETA: ${task.eta_time}</p>
+      <div class="due-date">Due: ${task.due_date || "No due date"}</div>
+      <span class="task-status status-${task.status.toLowerCase()}">${
       task.status
     }</span>
-          <div class="task-actions">
-              <button class="action-btn edit-btn" onclick="taskController.editTask(${
-                task.id
-              })">Edit</button>
-              <button class="action-btn delete-btn" onclick="taskController.deleteTask(${
-                task.id
-              })">Delete</button>
-              <button class="action-btn complete-btn" onclick="taskController.toggleComplete(${
-                task.id
-              })">
-                  ${
-                    task.status === "Completed"
-                      ? "Mark Incomplete"
-                      : "Mark Complete"
-                  }
-              </button>
-          </div>
-      `;
+      <div class="task-actions">
+        <button class="action-btn edit-btn" onclick="taskController.editTask(${
+          task.id
+        })">Edit</button>
+        <button class="action-btn delete-btn" onclick="taskController.deleteTask(${
+          task.id
+        })">Delete</button>
+        <button class="action-btn complete-btn" onclick="taskController.toggleComplete(${
+          task.id
+        })">
+          ${task.status === "Completed" ? "Mark Incomplete" : "Mark Complete"}
+        </button>
+      </div>
+    `;
     return taskCard;
   }
 }

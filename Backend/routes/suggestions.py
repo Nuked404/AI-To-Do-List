@@ -2,17 +2,32 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from .. import models, schemas, llm
 from ..database import get_db
+from datetime import datetime
 
 router = APIRouter(prefix="/suggestions", tags=["Suggestions"])
 
 @router.post("/{user_id}", response_model=schemas.Suggestion)
 def generate_suggestion(user_id: int, db: Session = Depends(get_db)):
-    tasks = db.query(models.Task).filter(models.Task.owner_id == user_id).all()
+    # Fetch only incomplete tasks (not "Completed")
+    tasks = db.query(models.Task).filter(
+        models.Task.owner_id == user_id,
+        models.Task.status != "Completed"  # Exclude completed tasks
+    ).all()
     user_data = db.query(models.UserData).filter(models.UserData.owner_id == user_id).first()
     if not user_data:
         raise HTTPException(status_code=400, detail="User data not found")
     
-    task_list = [{"title": t.title, "priority": t.priority, "status": t.status} for t in tasks]
+    # Include all task fields
+    task_list = [
+        {
+            "title": t.title,
+            "task_type": t.task_type,
+            "eta_time": t.eta_time,
+            "due_date": t.due_date.isoformat() if t.due_date else None,
+            "priority": t.priority,
+            "status": t.status
+        } for t in tasks
+    ]
     suggestions = llm.generate_suggestions(task_list, user_data.current_mood, user_data.current_energy)
     
     db_suggestion = db.query(models.Suggestion).filter(models.Suggestion.owner_id == user_id).first()

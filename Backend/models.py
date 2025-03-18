@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, Text
 from sqlalchemy.sql import func
 from .database import Base
 import enum
@@ -62,6 +62,6 @@ class Suggestion(Base):
     __tablename__ = "suggestion"
     id = Column(Integer, primary_key=True, index=True)
     owner_id = Column(Integer, ForeignKey("user.id"), nullable=False)
-    current_suggestion = Column(String(255), nullable=False)
-    current_alternative_suggestion = Column(String(255), nullable=False)
-    current_moti_message = Column(String(255), nullable=False)
+    current_suggestion = Column(Text, nullable=False)  # Changed to Text
+    current_alternative_suggestion = Column(Text, nullable=False)  # Changed to Text
+    current_moti_message = Column(Text, nullable=False)  # Changed to Text

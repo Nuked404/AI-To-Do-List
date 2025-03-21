@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./Config.js";
+
 class LoginManager {
   constructor() {
     document
@@ -11,7 +13,7 @@ class LoginManager {
     const password = document.getElementById("loginPassword").value;
 
     try {
-      const response = await fetch("http://localhost:8000/users/login", {
+      const response = await fetch(`${API_BASE_URL}/users/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

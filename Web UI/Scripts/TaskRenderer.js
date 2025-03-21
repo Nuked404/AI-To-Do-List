@@ -23,9 +23,9 @@ export class TaskRenderer {
     this.completedCountElement = document.getElementById("completedCount");
     this.allTasksCountElement = document.getElementById("allTasksCount");
 
-    // Load checkbox state from local storage
+    const hideEmptyDefault = localStorage.getItem("hideEmptyCategories");
     this.hideEmptyCheckbox.checked =
-      localStorage.getItem("hideEmptyCategories") === "true";
+      hideEmptyDefault === null ? true : hideEmptyDefault === "true";
     this.hideEmptyCheckbox.addEventListener("change", () => {
       localStorage.setItem(
         "hideEmptyCategories",
@@ -134,17 +134,9 @@ export class TaskRenderer {
       hideEmpty
     );
 
-    // Show task sections container if there are any filtered tasks or for the no-tasks message
+    // Show task sections container if there are any filtered tasks or if not hiding empty sections
     if (filteredTasks.length > 0 || !hideEmpty) {
       this.taskSectionsElement.style.display = "block";
-    }
-
-    // Handle no-tasks case for the current filter
-    if (filteredTasks.length === 0) {
-      this.normalTasksElement.innerHTML =
-        "<p class='text-gray-500'>No tasks available for this filter. Try another category!</p>";
-      this.normalSectionHeader.style.display = "block";
-      this.normalTasksElement.style.display = "block";
     }
   }
 

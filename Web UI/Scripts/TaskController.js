@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./Config.js";
+
 export class TaskController {
   constructor(taskManager, taskRenderer, popupManager) {
     this.taskManager = taskManager;
@@ -49,7 +51,7 @@ export class TaskController {
   }
 
   async updatePosition(taskId, position) {
-    await fetch(`http://localhost:8000/tasks/position/${taskId}`, {
+    await fetch(`${API_BASE_URL}/tasks/position/${taskId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ position: position }),

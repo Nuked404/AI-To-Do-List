@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./Config.js";
+
 export class TaskManager {
   constructor() {
     this.tasks = [];
@@ -7,9 +9,7 @@ export class TaskManager {
 
   async fetchTasks() {
     try {
-      const response = await fetch(
-        `http://localhost:8000/tasks/${this.userId}`
-      );
+      const response = await fetch(`${API_BASE_URL}/tasks/${this.userId}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -23,7 +23,7 @@ export class TaskManager {
   }
 
   async addTask(task) {
-    const response = await fetch(`http://localhost:8000/tasks/${this.userId}`, {
+    const response = await fetch(`${API_BASE_URL}/tasks/${this.userId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(task),
@@ -34,7 +34,7 @@ export class TaskManager {
   }
 
   async editTask(taskId, task) {
-    const response = await fetch(`http://localhost:8000/tasks/${taskId}`, {
+    const response = await fetch(`${API_BASE_URL}/tasks/${taskId}`, {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(task),
@@ -46,7 +46,7 @@ export class TaskManager {
   }
 
   async deleteTask(taskId) {
-    await fetch(`http://localhost:8000/tasks/${taskId}`, { method: "DELETE" });
+    await fetch(`${API_BASE_URL}/tasks/${taskId}`, { method: "DELETE" });
     this.tasks = this.tasks.filter((t) => t.id !== taskId);
   }
 

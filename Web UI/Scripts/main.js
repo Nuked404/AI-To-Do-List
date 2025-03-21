@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "./Config.js"; // Redundant but i want it to be clear that it's being used
 import { TaskManager } from "./TaskManager.js";
 import { TaskRenderer } from "./TaskRenderer.js";
 import { TaskController } from "./TaskController.js";

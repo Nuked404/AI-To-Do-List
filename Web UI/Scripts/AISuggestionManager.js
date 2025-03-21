@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./Config.js";
+
 export class AISuggestionManager {
   constructor() {
     this.suggestBtn = document.getElementById("suggestBtn");
@@ -52,7 +54,7 @@ export class AISuggestionManager {
       payload.current_energy = this.selectedEnergy;
 
     if (Object.keys(payload).length > 0) {
-      await fetch(`http://localhost:8000/user_data/${this.userId}`, {
+      await fetch(`${API_BASE_URL}/user_data/${this.userId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -62,10 +64,10 @@ export class AISuggestionManager {
 
   async loadUserDataAndSuggestions() {
     const userDataResponse = await fetch(
-      `http://localhost:8000/user_data/${this.userId}`
+      `${API_BASE_URL}/user_data/${this.userId}`
     );
     const suggestionResponse = await fetch(
-      `http://localhost:8000/suggestions/${this.userId}`
+      `${API_BASE_URL}/suggestions/${this.userId}`
     );
 
     if (userDataResponse.ok) {
@@ -94,7 +96,7 @@ export class AISuggestionManager {
   async generateSuggestion() {
     if (this.selectedMood || this.selectedEnergy) {
       const response = await fetch(
-        `http://localhost:8000/suggestions/${this.userId}`,
+        `${API_BASE_URL}/suggestions/${this.userId}`,
         {
           method: "POST",
         }
@@ -133,7 +135,7 @@ export class AISuggestionManager {
 
   async getMotivationalMessage() {
     const response = await fetch(
-      `http://localhost:8000/suggestions/motivation/${this.userId}`
+      `${API_BASE_URL}/suggestions/motivation/${this.userId}`
     );
     const data = await response.json();
     this.motiOutput.querySelector("p").textContent = data.motivational_message;

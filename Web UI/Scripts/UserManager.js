@@ -1,3 +1,5 @@
+import { API_BASE_URL } from "./Config.js";
+
 export class UserManager {
   constructor() {
     this.userId = localStorage.getItem("user_id");
@@ -8,9 +10,7 @@ export class UserManager {
   async loadUsername() {
     if (this.userId) {
       try {
-        const response = await fetch(
-          `http://localhost:8000/users/${this.userId}`
-        );
+        const response = await fetch(`${API_BASE_URL}/users/${this.userId}`);
         if (response.ok) {
           const user = await response.json();
           this.usernameElement.textContent = user.name;

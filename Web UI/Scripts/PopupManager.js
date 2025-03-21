@@ -52,15 +52,19 @@ export class PopupManager {
   }
 
   async submitTask() {
+    const existingTask =
+      this.editingId !== null
+        ? this.taskManager.tasks.find((t) => t.id === this.editingId)
+        : null;
     const task = {
       title: document.getElementById("taskTitle").value,
       task_type: document.getElementById("taskType").value,
       eta_time: document.getElementById("taskETATime").value,
       priority: document.getElementById("taskPriority").value,
-      status: "Pending", // Always Pending for new tasks
+      status: existingTask ? existingTask.status : "Pending", // Preserve status unless toggled elsewhere
       due_date: document.getElementById("taskDueDate").value || null,
+      position: existingTask ? existingTask.position : 0, // Preserve position
     };
-
     if (task.title && task.eta_time) {
       if (this.editingId !== null) {
         await this.taskManager.editTask(this.editingId, task);

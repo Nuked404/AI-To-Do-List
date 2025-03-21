@@ -52,8 +52,11 @@ export class TaskManager {
 
   async toggleComplete(taskId) {
     const task = this.tasks.find((t) => t.id === taskId);
-    task.status = task.status === "Completed" ? "Pending" : "Completed";
-    await this.editTask(taskId, task);
+    const updatedTask = {
+      ...task,
+      status: task.status === "Completed" ? "Pending" : "Completed",
+    };
+    await this.editTask(taskId, updatedTask);
   }
 
   getSectionTasks(priority) {

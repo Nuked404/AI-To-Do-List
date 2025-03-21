@@ -41,20 +41,32 @@ def update_task(task_id: int, task: schemas.TaskCreate, db: Session = Depends(ge
         raise HTTPException(status_code=404, detail="Task not found")
     
     old_priority = db_task.priority
+    old_position = db_task.position  # Store original position
+    
+    # Update fields from request, excluding position unless priority changes
+    task_dict = task.model_dump(exclude_unset=True)  # Only update provided fields
     if old_priority != task.priority:
         max_position = db.query(models.Task).filter(
             models.Task.owner_id == db_task.owner_id,
             models.Task.priority == task.priority
         ).order_by(models.Task.position.desc()).first()
         db_task.position = max_position.position + 1 if max_position else 0
+    else:
+        task_dict.pop("position", None)  # Don’t override position unless explicitly sent
     
-    for key, value in task.model_dump().items():
+    for key, value in task_dict.items():
         setattr(db_task, key, value)
     
     db.commit()
-    normalize_positions(db, db_task.owner_id, db_task.priority)
     if old_priority != task.priority:
         normalize_positions(db, db_task.owner_id, old_priority)
+        normalize_positions(db, db_task.owner_id, task.priority)
+    else:
+        # Only normalize if position wasn’t explicitly changed
+        if "position" not in task_dict:
+            db_task.position = old_position  # Restore original position
+            db.commit()
+    
     db.refresh(db_task)
     return db_task
 

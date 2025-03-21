@@ -21,7 +21,7 @@ class TaskBase(BaseModel):
     priority: str
     status: str
     due_date: Optional[datetime] = None
-    # position: int = 0  
+    position: Optional[int] = None  # Add position as optional
 
 class TaskCreate(TaskBase):
     pass

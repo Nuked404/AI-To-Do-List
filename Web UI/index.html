@@ -13,62 +13,6 @@
       referrerpolicy="no-referrer"
     />
     <link rel="stylesheet" href="CSS/styles.css" />
-    <style>
-      .fade-in {
-        animation: fadeIn 0.5s ease-in-out;
-      }
-      .slide-up {
-        animation: slideUp 0.5s ease-in-out;
-      }
-      .hover-grow:hover {
-        transform: scale(1.05);
-        transition: transform 0.2s ease-in-out;
-      }
-      .icon-outline {
-        -webkit-text-stroke: 1px white;
-        color: transparent;
-      }
-      .gradient-text {
-        background: linear-gradient(to right, #3b82f6, #9333ea);
-        -webkit-background-clip: text;
-        background-clip: text;
-        -webkit-text-fill-color: transparent;
-      }
-      .gradient-button {
-        background: linear-gradient(to right, #3b82f6, #9333ea);
-      }
-      .selected {
-        border: 2px solid #3b82f6;
-        box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-      }
-      .suggestion-slide {
-        transition: transform 0.3s ease-in-out;
-      }
-      #overlay {
-        z-index: 1500;
-      }
-      #taskPopup {
-        z-index: 2000;
-      }
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-        }
-        to {
-          opacity: 1;
-        }
-      }
-      @keyframes slideUp {
-        from {
-          transform: translateY(20px);
-          opacity: 0;
-        }
-        to {
-          transform: translateY(0);
-          opacity: 1;
-        }
-      }
-    </style>
   </head>
   <body class="bg-gray-100 font-sans">
     <div class="flex flex-col md:flex-row min-h-screen">

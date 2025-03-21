@@ -35,6 +35,14 @@ export class TaskRenderer {
     );
     const lowTasks = this.taskManager.tasks.filter((t) => t.priority === "Low");
 
+    // Initially hide all sections
+    this.criticalSection.style.display = "none";
+    this.highSection.style.display = "none";
+    this.normalSection.style.display = "none";
+    this.lowSection.style.display = "none";
+    this.taskSectionsElement.style.display = "none";
+
+    // Render each section and show only if tasks exist
     this.renderSection(
       criticalTasks,
       this.criticalSection,
@@ -60,26 +68,26 @@ export class TaskRenderer {
       this.lowCountElement
     );
 
-    // Show task sections if there are any tasks, hide otherwise
+    // Show task sections container only if there are any tasks
     if (this.taskManager.tasks.length > 0) {
       this.taskSectionsElement.style.display = "block";
     } else {
-      this.taskSectionsElement.style.display = "none";
+      this.taskSectionsElement.style.display = "block"; // Keep visible for the "no tasks" message
       this.normalTasksElement.innerHTML =
         "<p class='text-gray-500'>No tasks available. Add a new task to get started!</p>";
-      this.normalSection.style.display = "block";
+      this.normalSection.style.display = "block"; // Show Normal section with message
     }
   }
 
   renderSection(tasks, sectionElement, taskListElement, countElement) {
     if (tasks.length > 0) {
-      sectionElement.style.display = "block";
+      sectionElement.style.display = "block"; // Show section if it has tasks
       tasks.forEach((task) => {
         taskListElement.appendChild(this.createTaskCard(task));
       });
       countElement.textContent = tasks.length;
     } else {
-      sectionElement.style.display = "none";
+      sectionElement.style.display = "none"; // Hide section if no tasks
     }
   }
 

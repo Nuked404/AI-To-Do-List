@@ -3,7 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Task Manager - Welcome</title>
+    <title>Welcome - AI Task Manager</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
@@ -11,65 +12,122 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-      crossorigin="anonymous"
-    />
     <link rel="stylesheet" href="CSS/styles.css" />
-    <link rel="stylesheet" href="CSS/auth.css" />
-    <link rel="stylesheet" href="CSS/landing.css" />
   </head>
-  <body>
-    <div class="landing-container">
-      <div class="header d-flex justify-content-between align-items-center">
-        <h1 class="futuristic-title">Ai based Task Manager</h1>
-        <div class="d-flex align-items-center gap-3">
-          <div class="theme-toggle" id="themeToggle"></div>
-          <a href="login.html" class="btn">Login</a>
-          <a href="register.html" class="btn">Register</a>
+  <body
+    class="bg-gradient-to-r from-blue-100 to-purple-100 font-sans min-h-screen flex flex-col"
+  >
+    <!-- Header: Sticky top bar with enhanced button visibility -->
+    <header
+      class="bg-gradient-to-r from-blue-400 to-purple-400 text-white p-4 sticky top-0 z-10 fade-in"
+    >
+      <div
+        class="flex flex-col md:flex-row justify-between items-center max-w-6xl mx-auto"
+      >
+        <div class="flex items-center mb-4 md:mb-0">
+          <i class="fas fa-brain text-2xl mr-2"></i>
+          <h1 class="text-2xl font-bold">AI Task Manager</h1>
         </div>
+        <nav class="flex space-x-4">
+          <!-- Login button: Solid color with hover gradient -->
+          <a
+            href="login.html"
+            class="bg-blue-500 px-5 py-2.5 rounded-lg text-white hover:bg-gradient-to-r hover:from-blue-500 hover:to-purple-500 flex items-center transition-all"
+          >
+            <i class="fas fa-sign-in-alt mr-2"></i> Login
+          </a>
+          <!-- Register button: Stronger gradient for emphasis -->
+          <a
+            href="register.html"
+            class="bg-gradient-to-r from-blue-500 to-purple-500 px-5 py-2.5 rounded-lg text-white hover:from-blue-600 hover:to-purple-600 flex items-center transition-all"
+          >
+            <i class="fas fa-user-plus mr-2"></i> Register
+          </a>
+        </nav>
       </div>
-      <div class="landing-content text-center">
-        <h2 class="futuristic-subtitle">Organize Your Future</h2>
-        <p class="lead">
-          A cutting-edge task management solution designed to streamline your
-          workflow with AI-powered insights and a sleek, modern interface.
-        </p>
-        <div class="feature-grid">
-          <div class="feature-card task-card">
-            <i class="fas fa-brain fa-2x mb-3"></i>
-            <h3>AI Suggestions</h3>
-            <p>
-              Get personalized task recommendations based on your mood and
-              energy levels.
-            </p>
-          </div>
-          <div class="feature-card task-card">
-            <i class="fas fa-tasks fa-2x mb-3"></i>
-            <h3>Priority Management</h3>
-            <p>
-              Sort and prioritize tasks effortlessly with a dynamic interface.
-            </p>
-          </div>
-          <div class="feature-card task-card">
-            <i class="fas fa-moon fa-2x mb-3"></i>
-            <h3>Dark Mode</h3>
-            <p>
-              Switch to a futuristic dark theme for a comfortable experience.
-            </p>
-          </div>
-        </div>
-        <a href="register.html" class="btn mt-4 get-started-btn">Get Started</a>
-      </div>
-    </div>
+    </header>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-      crossorigin="anonymous"
-    ></script>
+    <!-- Hero Section: Centered headline with subtle abstract background -->
+    <section class="flex-grow flex items-center justify-center py-16 relative">
+      <!-- Subtle abstract background -->
+      <div
+        class="absolute inset-0 bg-gradient-to-br from-blue-50 to-purple-50 opacity-30 z-0"
+      ></div>
+      <div class="text-center max-w-3xl mx-auto relative z-10 slide-up">
+        <h2 class="text-3xl md:text-5xl font-bold gradient-text mb-4">
+          Organize Your Future with AI
+        </h2>
+        <p class="text-base md:text-lg text-gray-600 mb-6">
+          Boost productivity with personalized task suggestions
+        </p>
+        <a
+          href="register.html"
+          class="inline-flex items-center bg-gradient-to-r from-blue-400 to-purple-400 text-white px-6 py-3 rounded-lg hover:from-blue-500 hover:to-purple-500 transition-all"
+        >
+          <i class="fas fa-rocket mr-2"></i> Get Started
+        </a>
+      </div>
+    </section>
+
+    <!-- Features Section: Responsive grid with hover effects -->
+    <section class="py-16 max-w-6xl mx-auto px-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 slide-up">
+        <!-- Feature 1: AI-Powered Suggestions -->
+        <div
+          class="bg-white bg-opacity-90 p-6 rounded-lg shadow-md hover-grow transition-transform"
+        >
+          <i class="fas fa-brain text-blue-600 text-3xl mb-4"></i>
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">
+            AI-Powered Suggestions
+          </h3>
+          <p class="text-base text-gray-600">
+            Get smart task recommendations tailored to your mood and energy.
+          </p>
+        </div>
+        <!-- Feature 2: Priority Management -->
+        <div
+          class="bg-white bg-opacity-90 p-6 rounded-lg shadow-md hover-grow transition-transform"
+        >
+          <i class="fas fa-tasks text-purple-600 text-3xl mb-4"></i>
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">
+            Priority Management
+          </h3>
+          <p class="text-base text-gray-600">
+            Easily sort and prioritize tasks with a dynamic, intuitive
+            interface.
+          </p>
+        </div>
+        <!-- Feature 3: Mood-Based Motivation -->
+        <div
+          class="bg-white bg-opacity-90 p-6 rounded-lg shadow-md hover-grow transition-transform"
+        >
+          <i class="fas fa-bolt text-pink-600 text-3xl mb-4"></i>
+          <h3 class="text-2xl font-bold text-gray-800 mb-2">
+            Mood-Based Motivation
+          </h3>
+          <p class="text-base text-gray-600">
+            Stay inspired with motivational boosts based on how you feel.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer: Updated with a matching gradient -->
+    <footer class="bg-gradient-to-r from-blue-50 to-purple-50 py-4">
+      <div class="text-center text-gray-700">
+        <p>© 2025 AI Task Manager. All rights reserved.</p>
+        <div class="mt-2">
+          <a href="#" class="text-blue-500 hover:underline mx-2"
+            >Privacy Policy</a
+          >
+          <a href="#" class="text-blue-500 hover:underline mx-2"
+            >Terms of Use</a
+          >
+        </div>
+      </div>
+    </footer>
+
+    <!-- Script for JS module -->
     <script type="module" src="Scripts/LandingManager.js"></script>
   </body>
 </html>

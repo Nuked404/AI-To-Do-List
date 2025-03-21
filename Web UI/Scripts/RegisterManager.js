@@ -1,8 +1,5 @@
-import { ThemeManager } from "./ThemeManager.js";
-
 class RegisterManager {
   constructor() {
-    new ThemeManager();
     document
       .getElementById("registerForm")
       .addEventListener("submit", (e) => this.handleRegister(e));

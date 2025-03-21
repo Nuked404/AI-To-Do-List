@@ -1,8 +1,5 @@
-import { ThemeManager } from "./ThemeManager.js";
-
 class LoginManager {
   constructor() {
-    new ThemeManager();
     document
       .getElementById("loginForm")
       .addEventListener("submit", (e) => this.handleLogin(e));

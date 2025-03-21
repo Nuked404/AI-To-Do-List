@@ -1,4 +1,3 @@
-import { ThemeManager } from "./ThemeManager.js";
 import { TaskManager } from "./TaskManager.js";
 import { TaskRenderer } from "./TaskRenderer.js";
 import { TaskController } from "./TaskController.js";
@@ -19,10 +18,9 @@ const taskController = new TaskController(
 window.taskController = taskController;
 window.taskRenderer = taskRenderer;
 
-new ThemeManager();
 new AISuggestionManager();
 new SidebarManager();
-new UserManager(); // Initialize UserManager here
+new UserManager();
 
 async function init() {
   await taskManager.fetchTasks();

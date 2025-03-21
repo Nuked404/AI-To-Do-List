@@ -2,7 +2,8 @@ export class SidebarManager {
   constructor() {
     this.menuToggle = document.getElementById("menuToggle");
     this.sidebar = document.getElementById("sidebar");
-    this.menuToggle.addEventListener("click", () => this.toggleSidebar());
+    if (this.menuToggle)
+      this.menuToggle.addEventListener("click", () => this.toggleSidebar());
   }
 
   toggleSidebar() {

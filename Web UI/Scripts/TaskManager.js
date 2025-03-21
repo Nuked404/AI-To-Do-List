@@ -6,10 +6,20 @@ export class TaskManager {
   }
 
   async fetchTasks() {
-    const response = await fetch(`http://localhost:8000/tasks/${this.userId}`);
-    this.tasks = await response.json();
-    console.log("Tasks after fetch:", this.tasks);
-    return this.tasks; // Return for chaining in TaskController
+    try {
+      const response = await fetch(
+        `http://localhost:8000/tasks/${this.userId}`
+      );
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      this.tasks = await response.json();
+      console.log("Tasks after fetch:", this.tasks);
+    } catch (error) {
+      console.error("Fetch tasks error:", error);
+      this.tasks = [];
+    }
+    return this.tasks;
   }
 
   async addTask(task) {

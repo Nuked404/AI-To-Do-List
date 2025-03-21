@@ -1,6 +1,7 @@
 export class TaskRenderer {
-  constructor(taskManager) {
+  constructor(taskManager, sidebarManager) {
     this.taskManager = taskManager;
+    this.sidebarManager = sidebarManager;
     this.taskSectionsElement = document.getElementById("taskSections");
     this.criticalTasksElement = document.getElementById("criticalTasks");
     this.highTasksElement = document.getElementById("highTasks");
@@ -10,11 +11,27 @@ export class TaskRenderer {
     this.highCountElement = document.getElementById("highCount");
     this.normalCountElement = document.getElementById("normalCount");
     this.lowCountElement = document.getElementById("lowCount");
-    this.criticalSection =
-      document.querySelector("#criticalTasks").parentElement;
-    this.highSection = document.querySelector("#highTasks").parentElement;
-    this.normalSection = document.querySelector("#normalTasks").parentElement;
-    this.lowSection = document.querySelector("#lowTasks").parentElement;
+    this.criticalSectionHeader = document.getElementById(
+      "criticalSectionHeader"
+    );
+    this.highSectionHeader = document.getElementById("highSectionHeader");
+    this.normalSectionHeader = document.getElementById("normalSectionHeader");
+    this.lowSectionHeader = document.getElementById("lowSectionHeader");
+    this.hideEmptyCheckbox = document.getElementById("hideEmptyCategories");
+    this.pendingCountElement = document.getElementById("pendingCount");
+    this.dueTodayCountElement = document.getElementById("dueTodayCount");
+    this.completedCountElement = document.getElementById("completedCount");
+    this.allTasksCountElement = document.getElementById("allTasksCount");
+
+    // Load checkbox state from local storage
+    this.hideEmptyCheckbox.checked =
+      localStorage.getItem("hideEmptyCategories") === "true";
+    this.hideEmptyCheckbox.addEventListener("change", () => {
+      localStorage.setItem(
+        "hideEmptyCategories",
+        this.hideEmptyCheckbox.checked
+      );
+    });
   }
 
   render() {
@@ -24,70 +41,134 @@ export class TaskRenderer {
     this.normalTasksElement.innerHTML = "";
     this.lowTasksElement.innerHTML = "";
 
-    const criticalTasks = this.taskManager.tasks.filter(
+    const today = new Date().toISOString().split("T")[0];
+    let filteredTasks = this.taskManager.tasks;
+    const filter = this.sidebarManager.getCurrentFilter();
+
+    // Apply filter
+    switch (filter) {
+      case "pending":
+        filteredTasks = this.taskManager.tasks.filter(
+          (t) => t.status === "Pending"
+        );
+        break;
+      case "dueToday":
+        filteredTasks = this.taskManager.tasks.filter(
+          (t) => t.due_date && t.due_date.split("T")[0] === today
+        );
+        break;
+      case "completed":
+        filteredTasks = this.taskManager.tasks.filter(
+          (t) => t.status === "Completed"
+        );
+        break;
+      case "all":
+        filteredTasks = this.taskManager.tasks;
+        break;
+      default:
+        filteredTasks = this.taskManager.tasks.filter(
+          (t) => t.status === "Pending"
+        ); // Default to pending
+        break;
+    }
+
+    // Update navbar counts (based on all tasks, not filtered)
+    this.pendingCountElement.textContent = this.taskManager.tasks.filter(
+      (t) => t.status === "Pending"
+    ).length;
+    this.dueTodayCountElement.textContent = this.taskManager.tasks.filter(
+      (t) => t.due_date && t.due_date.split("T")[0] === today
+    ).length;
+    this.completedCountElement.textContent = this.taskManager.tasks.filter(
+      (t) => t.status === "Completed"
+    ).length;
+    this.allTasksCountElement.textContent = this.taskManager.tasks.length;
+
+    const criticalTasks = filteredTasks.filter(
       (t) => t.priority === "Critical"
     );
-    const highTasks = this.taskManager.tasks.filter(
-      (t) => t.priority === "High"
-    );
-    const normalTasks = this.taskManager.tasks.filter(
-      (t) => t.priority === "Normal"
-    );
-    const lowTasks = this.taskManager.tasks.filter((t) => t.priority === "Low");
+    const highTasks = filteredTasks.filter((t) => t.priority === "High");
+    const normalTasks = filteredTasks.filter((t) => t.priority === "Normal");
+    const lowTasks = filteredTasks.filter((t) => t.priority === "Low");
+
+    const hideEmpty = this.hideEmptyCheckbox.checked;
 
     // Initially hide all sections
-    this.criticalSection.style.display = "none";
-    this.highSection.style.display = "none";
-    this.normalSection.style.display = "none";
-    this.lowSection.style.display = "none";
+    this.criticalSectionHeader.style.display = "none";
+    this.criticalTasksElement.style.display = "none";
+    this.highSectionHeader.style.display = "none";
+    this.highTasksElement.style.display = "none";
+    this.normalSectionHeader.style.display = "none";
+    this.normalTasksElement.style.display = "none";
+    this.lowSectionHeader.style.display = "none";
+    this.lowTasksElement.style.display = "none";
     this.taskSectionsElement.style.display = "none";
 
-    // Render each section and show only if tasks exist
+    // Render each section with filtered tasks
     this.renderSection(
       criticalTasks,
-      this.criticalSection,
+      this.criticalSectionHeader,
       this.criticalTasksElement,
-      this.criticalCountElement
+      this.criticalCountElement,
+      hideEmpty
     );
     this.renderSection(
       highTasks,
-      this.highSection,
+      this.highSectionHeader,
       this.highTasksElement,
-      this.highCountElement
+      this.highCountElement,
+      hideEmpty
     );
     this.renderSection(
       normalTasks,
-      this.normalSection,
+      this.normalSectionHeader,
       this.normalTasksElement,
-      this.normalCountElement
+      this.normalCountElement,
+      hideEmpty
     );
     this.renderSection(
       lowTasks,
-      this.lowSection,
+      this.lowSectionHeader,
       this.lowTasksElement,
-      this.lowCountElement
+      this.lowCountElement,
+      hideEmpty
     );
 
-    // Show task sections container only if there are any tasks
-    if (this.taskManager.tasks.length > 0) {
+    // Show task sections container if there are any filtered tasks or for the no-tasks message
+    if (filteredTasks.length > 0 || !hideEmpty) {
       this.taskSectionsElement.style.display = "block";
-    } else {
-      this.taskSectionsElement.style.display = "block"; // Keep visible for the "no tasks" message
+    }
+
+    // Handle no-tasks case for the current filter
+    if (filteredTasks.length === 0) {
       this.normalTasksElement.innerHTML =
-        "<p class='text-gray-500'>No tasks available. Add a new task to get started!</p>";
-      this.normalSection.style.display = "block"; // Show Normal section with message
+        "<p class='text-gray-500'>No tasks available for this filter. Try another category!</p>";
+      this.normalSectionHeader.style.display = "block";
+      this.normalTasksElement.style.display = "block";
     }
   }
 
-  renderSection(tasks, sectionElement, taskListElement, countElement) {
+  renderSection(
+    tasks,
+    headerElement,
+    taskListElement,
+    countElement,
+    hideEmpty
+  ) {
     if (tasks.length > 0) {
-      sectionElement.style.display = "block"; // Show section if it has tasks
+      headerElement.style.display = "flex";
+      taskListElement.style.display = "flex";
       tasks.forEach((task) => {
         taskListElement.appendChild(this.createTaskCard(task));
       });
       countElement.textContent = tasks.length;
+    } else if (!hideEmpty) {
+      headerElement.style.display = "flex";
+      taskListElement.style.display = "flex";
+      countElement.textContent = "0";
     } else {
-      sectionElement.style.display = "none"; // Hide section if no tasks
+      headerElement.style.display = "none";
+      taskListElement.style.display = "none";
     }
   }
 

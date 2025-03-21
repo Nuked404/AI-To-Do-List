@@ -7,7 +7,8 @@ import { SidebarManager } from "./SidebarManager.js";
 import { UserManager } from "./UserManager.js";
 
 const taskManager = new TaskManager();
-const taskRenderer = new TaskRenderer(taskManager);
+const taskRenderer = new TaskRenderer(taskManager, null); // Temporarily pass null for sidebarManager
+const sidebarManager = new SidebarManager(taskRenderer); // Pass taskRenderer here
 const popupManager = new PopupManager(taskManager, taskRenderer);
 const taskController = new TaskController(
   taskManager,
@@ -15,16 +16,25 @@ const taskController = new TaskController(
   popupManager
 );
 
+// Update TaskRenderer with sidebarManager after instantiation
+taskRenderer.sidebarManager = sidebarManager;
+
 window.taskController = taskController;
 window.taskRenderer = taskRenderer;
 
 new AISuggestionManager();
-new SidebarManager();
 new UserManager();
 
 async function init() {
   await taskManager.fetchTasks();
   taskRenderer.render();
+
+  // Add event listener for hide empty categories checkbox
+  const hideEmptyCheckbox = document.getElementById("hideEmptyCategories");
+  hideEmptyCheckbox.addEventListener("change", () => {
+    localStorage.setItem("hideEmptyCategories", hideEmptyCheckbox.checked);
+    taskRenderer.render();
+  });
 }
 
 init();

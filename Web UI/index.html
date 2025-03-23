@@ -111,7 +111,7 @@
         <!-- Logout Button with Gradient -->
         <button
           id="logoutBtn"
-          class="mt-auto bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 rounded hover:from-blue-700 hover:to-purple-700 flex items-center"
+          class="mt-auto bg-gradient-to-r from-blue-400 to-purple-400 text-white px-4 py-2 rounded hover:from-blue-700 hover:to-purple-700 flex items-center"
         >
           <i class="fas fa-sign-out-alt mr-2"></i> Logout
         </button>
@@ -137,7 +137,7 @@
           </div>
           <button
             id="newTaskBtn"
-            class="text-white px-4 py-2 rounded hover:bg-blue-700 gradient-button"
+            class="text-white px-4 py-2 rounded hover:bg-blue-700 bg-gradient-to-r from-blue-400 to-purple-400"
           >
             + New Task
           </button>
@@ -215,9 +215,9 @@
               </div>
             </div>
           </div>
-          <!-- AI Task Suggestion Section -->
+          <!-- AI Task Suggestions Section -->
           <div
-            class="bg-gradient-to-r from-blue-500 to-purple-600 p-6 rounded-lg shadow-md mb-6 slide-up"
+            class="bg-gradient-to-r from-blue-400 to-purple-500 p-6 rounded-lg shadow-md mb-6 slide-up"
           >
             <div
               class="flex flex-col md:flex-row justify-between items-center mb-4"
@@ -233,43 +233,52 @@
               </div>
               <div class="flex items-center space-x-2">
                 <button
-                  id="toggleAltLeft"
-                  class="text-white hover:text-gray-300 hidden"
-                >
-                  <i class="fas fa-arrow-left"></i>
-                </button>
-                <button
                   id="suggestBtn"
                   class="bg-white text-blue-600 font-semibold px-4 py-2 rounded hover:bg-gray-200 flex items-center"
                 >
-                  <i class="fas fa-magic mr-2"></i> Get Suggestion
-                </button>
-                <button
-                  id="toggleAltRight"
-                  class="text-white hover:text-gray-300"
-                >
-                  <i class="fas fa-arrow-right"></i>
+                  <i class="fas fa-magic mr-2"></i> Get Suggestions
                 </button>
               </div>
             </div>
-            <div id="suggestionContainer" class="flex overflow-hidden">
+            <div
+              id="suggestionContainer"
+              class="flex items-stretch overflow-hidden relative"
+            >
+              <!-- Main Suggestion -->
               <div
                 id="suggestionOutput"
-                class="suggestion-slide w-full flex-shrink-0"
+                class="suggestion-slide w-full flex-shrink-0 flex items-stretch space-x-2"
               >
-                <p class="bg-white bg-opacity-20 p-4 rounded text-white"></p>
+                <p
+                  class="bg-white bg-opacity-20 p-4 rounded-lg text-white flex-grow"
+                ></p>
+                <button
+                  id="toggleAltRight"
+                  class="bg-white bg-opacity-20 text-white hover:bg-opacity-30 flex items-center justify-center w-10 px-2 rounded-lg"
+                >
+                  >
+                </button>
               </div>
+              <!-- Alternative Suggestion -->
               <div
                 id="altSuggestionOutput"
-                class="suggestion-slide w-full flex-shrink-0 hidden"
+                class="suggestion-slide w-full flex-shrink-0 hidden flex items-stretch space-x-2"
               >
-                <p class="bg-white bg-opacity-20 p-4 rounded text-white"></p>
+                <button
+                  id="toggleAltLeft"
+                  class="bg-white bg-opacity-20 text-white hover:bg-opacity-30 flex items-center justify-center w-10 px-2 rounded-lg hidden"
+                >
+                  <
+                </button>
+                <p
+                  class="bg-white bg-opacity-20 p-4 rounded-lg text-white flex-grow"
+                ></p>
               </div>
             </div>
           </div>
           <!-- Boost Your Motivation Section -->
           <div
-            class="bg-gradient-to-r from-purple-600 to-pink-600 p-6 rounded-lg shadow-md mb-6 slide-up"
+            class="bg-gradient-to-r from-purple-400 to-pink-400 p-6 rounded-lg shadow-md mb-6 slide-up"
           >
             <div
               class="flex flex-col md:flex-row justify-between items-center mb-4"
@@ -430,7 +439,7 @@
       </div>
       <button
         id="submitTaskBtn"
-        class="w-full text-white px-4 py-2 rounded gradient-button"
+        class="w-full text-white px-4 py-2 rounded bg-gradient-to-r from-blue-400 to-purple-400"
       >
         Add Task
       </button>
@@ -438,37 +447,12 @@
 
     <script type="module" src="scripts/main.js"></script>
     <script type="module" src="scripts/AuthRedirect.js"></script>
+    <script type="module" src="scripts/SuggestionToggler.js"></script>
     <script>
       // Logout functionality
       document.getElementById("logoutBtn").addEventListener("click", () => {
         localStorage.clear();
         window.location.href = "landing.html";
-      });
-
-      // Suggestion toggling
-      const suggestionOutput = document.getElementById("suggestionOutput");
-      const altSuggestionOutput = document.getElementById(
-        "altSuggestionOutput"
-      );
-      const toggleAltRight = document.getElementById("toggleAltRight");
-      const toggleAltLeft = document.getElementById("toggleAltLeft");
-
-      toggleAltRight.addEventListener("click", () => {
-        suggestionOutput.classList.add("hidden");
-        altSuggestionOutput.classList.remove("hidden");
-        suggestionOutput.style.transform = "translateX(-100%)";
-        altSuggestionOutput.style.transform = "translateX(0)";
-        toggleAltRight.classList.add("hidden");
-        toggleAltLeft.classList.remove("hidden");
-      });
-
-      toggleAltLeft.addEventListener("click", () => {
-        altSuggestionOutput.classList.add("hidden");
-        suggestionOutput.classList.remove("hidden");
-        suggestionOutput.style.transform = "translateX(0)";
-        altSuggestionOutput.style.transform = "translateX(100%)";
-        toggleAltLeft.classList.add("hidden");
-        toggleAltRight.classList.remove("hidden");
       });
 
       // Overlay click handling

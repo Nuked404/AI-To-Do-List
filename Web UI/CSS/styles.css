@@ -18,9 +18,7 @@
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
-.gradient-button {
-  background: linear-gradient(to right, #3b82f6, #9333ea);
-}
+
 .selected {
   border: 2px solid #3b82f6;
   box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
@@ -117,4 +115,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem; 
+}
+
+.suggestion-slide {
+  transition: transform 0.3s ease-in-out;
 }

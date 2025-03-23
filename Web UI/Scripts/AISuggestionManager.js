@@ -12,7 +12,7 @@ export class AISuggestionManager {
     this.userId = localStorage.getItem("user_id");
 
     this.initButtons();
-    this.loadUserDataAndSuggestions(); // Load on init
+    this.loadUserDataAndSuggestions();
     this.suggestBtn.addEventListener("click", () => this.generateSuggestion());
     this.toggleAltRight.addEventListener("click", () =>
       this.showAltSuggestion()
@@ -20,7 +20,9 @@ export class AISuggestionManager {
     this.toggleAltLeft.addEventListener("click", () =>
       this.showMainSuggestion()
     );
-    this.motiBtn.addEventListener("click", () => this.getMotivationalMessage());
+    this.motiBtn.addEventListener("click", () =>
+      this.generateMotivationalMessage()
+    );
   }
 
   initButtons() {
@@ -102,6 +104,7 @@ export class AISuggestionManager {
         }
       );
       this.currentSuggestion = await response.json();
+      this.showMainSuggestion();
       this.updateOutputs();
     } else {
       this.suggestionOutput.querySelector("p").textContent =
@@ -117,6 +120,8 @@ export class AISuggestionManager {
       this.suggestionOutput.classList.remove("hidden");
       this.toggleAltLeft.classList.add("hidden");
       this.toggleAltRight.classList.remove("hidden");
+      this.suggestionOutput.style.transform = "translateX(0)";
+      this.altSuggestionOutput.style.transform = "translateX(100%)";
     }
   }
 
@@ -129,29 +134,43 @@ export class AISuggestionManager {
         this.altSuggestionOutput.classList.remove("hidden");
         this.toggleAltRight.classList.add("hidden");
         this.toggleAltLeft.classList.remove("hidden");
+        this.suggestionOutput.style.transform = "translateX(-100%)";
+        this.altSuggestionOutput.style.transform = "translateX(0)";
       }
     }
   }
 
-  async getMotivationalMessage() {
+  async generateMotivationalMessage() {
+    // Updated method
     const response = await fetch(
-      `${API_BASE_URL}/suggestions/motivation/${this.userId}`
+      `${API_BASE_URL}/suggestions/motivation/${this.userId}`,
+      {
+        method: "GET",
+      }
     );
-    const data = await response.json();
-    this.motiOutput.querySelector("p").textContent = data.motivational_message;
-    if (this.currentSuggestion)
-      this.currentSuggestion.current_moti_message = data.motivational_message;
+    if (response.ok) {
+      const data = await response.json();
+      this.motiOutput.querySelector("p").textContent =
+        data.motivational_message;
+      if (this.currentSuggestion)
+        this.currentSuggestion.current_moti_message = data.motivational_message;
+    } else {
+      this.motiOutput.querySelector("p").textContent =
+        "Couldn’t get a motivational boost right now.";
+    }
   }
 
   updateOutputs() {
     this.suggestionOutput.querySelector("p").textContent =
-      this.currentSuggestion?.current_suggestion || "AI Task Suggestion";
+      this.currentSuggestion?.current_suggestion ||
+      "Click 'Get Suggestion' to start!";
     this.altSuggestionOutput.querySelector("p").textContent =
       this.currentSuggestion?.current_alternative_suggestion ||
-      "Alternative AI Task Suggestion";
+      "No backup suggestion yet.";
     this.motiOutput.querySelector("p").textContent =
-      this.currentSuggestion?.current_moti_message || "AI Motivation";
-    this.altSuggestionOutput.classList.add("hidden"); // Default to main suggestion
+      this.currentSuggestion?.current_moti_message ||
+      "Click 'Get Motivation' for a boost!";
+    this.altSuggestionOutput.classList.add("hidden");
     this.suggestionOutput.classList.remove("hidden");
     this.toggleAltLeft.classList.add("hidden");
     this.toggleAltRight.classList.remove("hidden");

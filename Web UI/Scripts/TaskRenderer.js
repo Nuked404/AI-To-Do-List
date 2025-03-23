@@ -174,6 +174,22 @@ export class TaskRenderer {
       "w-full",
       "md:w-1/2"
     );
+
+    // Format due date/time to "MM/DD/YYYY, h:mm AM/PM" or "No due date"
+    let dueDateText = "No due date";
+    if (task.due_date) {
+      const dueDate = new Date(task.due_date);
+      const options = {
+        month: "2-digit",
+        day: "2-digit",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+      };
+      dueDateText = dueDate.toLocaleString("en-US", options).replace(",", "");
+    }
+
     taskCard.innerHTML = `
       <div class="flex justify-between items-center mb-2">
         <h3 class="text-xl font-bold text-black">${task.title}</h3>
@@ -215,7 +231,10 @@ export class TaskRenderer {
       <p class="text-gray-600 mb-2">Type: ${task.task_type} | ETA: ${
       task.eta_time
     }</p>
-      <p class="text-gray-600 mb-2">Due: ${task.due_date || "No due date"}</p>
+      <p class="text-gray-600 mb-2">Due: ${dueDateText}</p>
+      <p class="text-gray-600 mb-2">Notify: ${
+        task.should_notify ? "Yes" : "No"
+      }${task.notify_when ? ` (${task.notify_when})` : ""}</p>
       <div class="flex items-center space-x-2 mb-4">
         <span class="bg-${
           task.status === "Pending"

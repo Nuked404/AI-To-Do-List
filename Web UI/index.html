@@ -385,6 +385,8 @@
       <select id="taskType" class="w-full p-2 mb-4 border rounded">
         <option value="Mental">Mental</option>
         <option value="Physical">Physical</option>
+        <option value="Creative">Creative</option>
+        <!-- New option -->
       </select>
       <input
         type="text"
@@ -398,11 +400,25 @@
         <option value="Normal">Normal</option>
         <option value="Low">Low</option>
       </select>
-      <input
-        type="date"
-        id="taskDueDate"
-        class="w-full p-2 mb-4 border rounded"
-      />
+      <div class="flex space-x-2 mb-4">
+        <input type="date" id="taskDueDate" class="w-1/2 p-2 border rounded" />
+        <input type="time" id="taskDueTime" class="w-1/2 p-2 border rounded" />
+      </div>
+      <div class="flex items-center mb-4">
+        <input
+          type="checkbox"
+          id="shouldNotify"
+          class="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+        />
+        <label for="shouldNotify" class="text-gray-800 mr-4">Notify Me</label>
+        <select id="notifyWhen" class="w-full p-2 border rounded">
+          <option value="">Select Notification Time</option>
+          <option value="On Due Time">On Due Time</option>
+          <option value="5 Minutes Before">5 Minutes Before</option>
+          <option value="30 Minutes Before">30 Minutes Before</option>
+          <option value="1 Hour Before">1 Hour Before</option>
+        </select>
+      </div>
       <button
         id="submitTaskBtn"
         class="w-full text-white px-4 py-2 rounded gradient-button"

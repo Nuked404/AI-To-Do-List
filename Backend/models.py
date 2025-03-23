@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, Text
+from sqlalchemy import Column, Integer, String, ForeignKey, DateTime, Enum, Text, Boolean
 from sqlalchemy.sql import func
 from .database import Base
 import enum
@@ -19,6 +19,13 @@ class EnergyEnum(enum.Enum):
 class TaskTypeEnum(enum.Enum):
     MENTAL = "Mental"
     PHYSICAL = "Physical"
+    CREATIVE = "Creative" 
+    
+class NotifyWhenEnum(enum.Enum): 
+    ON_DUE = "On Due Time"
+    FIVE_MIN_BEFORE = "5 Minutes Before"
+    THIRTY_MIN_BEFORE = "30 Minutes Before"
+    ONE_HOUR_BEFORE = "1 Hour Before"
 
 class PriorityEnum(enum.Enum):
     CRITICAL = "Critical"
@@ -47,9 +54,11 @@ class Task(Base):
     eta_time = Column(String(10), nullable=False)
     priority = Column(Enum(PriorityEnum, name="priorityenum", create_constraint=True, values_callable=lambda x: [e.value for e in x]), nullable=False)
     status = Column(Enum(StatusEnum, name="statusenum", create_constraint=True, values_callable=lambda x: [e.value for e in x]), nullable=False)
-    due_date = Column(DateTime, nullable=True)
+    due_date = Column(DateTime, nullable=True) 
     created_at = Column(DateTime, default=func.now())
     position = Column(Integer, nullable=False, default=0)
+    should_notify = Column(Boolean, default=False, nullable=False) 
+    notify_when = Column(Enum(NotifyWhenEnum, name="notifywhenenum", create_constraint=True, values_callable=lambda x: [e.value for e in x]), nullable=True)
 
 class UserData(Base):
     __tablename__ = "user_data"

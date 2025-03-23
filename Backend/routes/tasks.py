@@ -28,7 +28,8 @@ def create_task(user_id: int, task: schemas.TaskCreate, db: Session = Depends(ge
     ).order_by(models.Task.position.desc()).first()
     position = max_position.position + 1 if max_position else 0
 
-    new_task = models.Task(owner_id=user_id, position=position, **task.model_dump())
+    task_data = task.model_dump(exclude={"position"})
+    new_task = models.Task(owner_id=user_id, position=position, **task_data)
     db.add(new_task)
     db.commit()
     db.refresh(new_task)
@@ -41,10 +42,9 @@ def update_task(task_id: int, task: schemas.TaskCreate, db: Session = Depends(ge
         raise HTTPException(status_code=404, detail="Task not found")
     
     old_priority = db_task.priority
-    old_position = db_task.position  # Store original position
+    old_position = db_task.position
     
-    # Update fields from request, excluding position unless priority changes
-    task_dict = task.model_dump(exclude_unset=True)  # Only update provided fields
+    task_dict = task.model_dump(exclude_unset=True)
     if old_priority != task.priority:
         max_position = db.query(models.Task).filter(
             models.Task.owner_id == db_task.owner_id,
@@ -52,7 +52,7 @@ def update_task(task_id: int, task: schemas.TaskCreate, db: Session = Depends(ge
         ).order_by(models.Task.position.desc()).first()
         db_task.position = max_position.position + 1 if max_position else 0
     else:
-        task_dict.pop("position", None)  # Don’t override position unless explicitly sent
+        task_dict.pop("position", None)
     
     for key, value in task_dict.items():
         setattr(db_task, key, value)
@@ -62,9 +62,8 @@ def update_task(task_id: int, task: schemas.TaskCreate, db: Session = Depends(ge
         normalize_positions(db, db_task.owner_id, old_priority)
         normalize_positions(db, db_task.owner_id, task.priority)
     else:
-        # Only normalize if position wasn’t explicitly changed
         if "position" not in task_dict:
-            db_task.position = old_position  # Restore original position
+            db_task.position = old_position
             db.commit()
     
     db.refresh(db_task)

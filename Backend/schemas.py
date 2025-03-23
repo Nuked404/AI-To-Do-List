@@ -21,7 +21,9 @@ class TaskBase(BaseModel):
     priority: str
     status: str
     due_date: Optional[datetime] = None
-    position: Optional[int] = None  # Add position as optional
+    position: Optional[int] = None
+    should_notify: bool = False 
+    notify_when: Optional[str] = None  
 
 class TaskCreate(TaskBase):
     pass

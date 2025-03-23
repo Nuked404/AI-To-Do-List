@@ -55,3 +55,66 @@
     opacity: 1;
   }
 }
+
+#sidebar {
+  transition: all 0.3s ease-in-out; /* Smooth transition for visibility */
+}
+
+#menuToggle {
+  display: none; /* Hidden by default, controlled by JS */
+  font-size: 12px; /* Smaller arrow size */
+  left: -10px;
+}
+
+@media (max-width: 767px) {
+  #sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 75%;
+    height: 100%;
+    z-index: 20;
+  }
+
+  #menuToggle {
+    display: flex; /* Show on small screens */
+    align-items: center;
+    justify-content: center;
+  }
+
+  .w-full.md\:w-4\/5 {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+@media (min-width: 768px) {
+  #sidebar {
+    position: sticky;
+    width: 20%;
+  }
+
+  #menuToggle {
+    display: none;
+  }
+}
+
+
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0; 
+}
+
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem; 
+}

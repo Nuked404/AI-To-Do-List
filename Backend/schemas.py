@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 from typing import Optional
 from datetime import datetime
 
@@ -24,6 +24,16 @@ class TaskBase(BaseModel):
     position: Optional[int] = None
     should_notify: bool = False 
     notify_when: Optional[str] = None  
+
+    @validator("due_date", pre=True)
+    def parse_due_date(cls, value):
+        if isinstance(value, str):
+            # Handle extra precision like ":00:00"
+            try:
+                return datetime.fromisoformat(value.rstrip(":00"))
+            except ValueError:
+                raise ValueError("Invalid datetime format")
+        return value
 
 class TaskCreate(TaskBase):
     pass

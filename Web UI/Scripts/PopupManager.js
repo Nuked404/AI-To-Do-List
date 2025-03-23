@@ -74,7 +74,7 @@ export class PopupManager {
         : null;
     const dueDate = document.getElementById("taskDueDate").value;
     const dueTime = document.getElementById("taskDueTime").value;
-    const dueDateTime = dueDate && dueTime ? `${dueDate}T${dueTime}:00` : null;
+    const dueDateTime = dueDate && dueTime ? `${dueDate}T${dueTime}:00` : null; // Correct ISO 8601
 
     const task = {
       title: document.getElementById("taskTitle").value,

@@ -149,14 +149,46 @@ export class TaskRenderer {
   ) {
     if (tasks.length > 0) {
       headerElement.style.display = "flex";
-      taskListElement.style.display = "flex";
+      taskListElement.style.display = "grid";
+      // Use Tailwind grid classes: 1 column on small screens, 2 on md+
+      taskListElement.classList.remove(
+        "flex",
+        "flex-col",
+        "md:flex-row",
+        "space-y-4",
+        "md:space-y-0",
+        "md:space-x-4"
+      );
+      taskListElement.classList.add(
+        "grid",
+        "grid-cols-1",
+        "md:grid-cols-2",
+        "gap-4"
+      );
+      taskListElement.innerHTML = ""; // Clear existing content
       tasks.forEach((task) => {
         taskListElement.appendChild(this.createTaskCard(task));
       });
       countElement.textContent = tasks.length;
     } else if (!hideEmpty) {
       headerElement.style.display = "flex";
-      taskListElement.style.display = "flex";
+      taskListElement.style.display = "grid";
+      taskListElement.classList.remove(
+        "flex",
+        "flex-col",
+        "md:flex-row",
+        "space-y-4",
+        "md:space-y-0",
+        "md:space-x-4"
+      );
+      taskListElement.classList.add(
+        "grid",
+        "grid-cols-1",
+        "md:grid-cols-2",
+        "gap-4"
+      );
+      taskListElement.innerHTML =
+        "<p class='text-gray-500 p-4'>No tasks in this category.</p>";
       countElement.textContent = "0";
     } else {
       headerElement.style.display = "none";
@@ -166,16 +198,16 @@ export class TaskRenderer {
 
   createTaskCard(task) {
     const taskCard = document.createElement("div");
+    // Remove md:w-1/2, let grid handle width; add min-w-0 to prevent overflow
     taskCard.classList.add(
       "bg-white",
       "p-4",
       "rounded-lg",
       "shadow-md",
       "w-full",
-      "md:w-1/2"
+      "min-w-0" // Prevents card from growing beyond container
     );
 
-    // Format due date/time to "MM/DD/YYYY, h:mm AM/PM" or "No due date"
     let dueDateText = "No due date";
     if (task.due_date) {
       const dueDate = new Date(task.due_date);
@@ -190,10 +222,16 @@ export class TaskRenderer {
       dueDateText = dueDate.toLocaleString("en-US", options).replace(",", "");
     }
 
+    const notificationIcon = task.should_notify
+      ? `<i class="fas fa-bell text-yellow-500 ml-2" title="Notification scheduled"></i>`
+      : "";
+
     taskCard.innerHTML = `
-      <div class="flex justify-between items-center mb-2">
-        <h3 class="text-xl font-bold text-black">${task.title}</h3>
-        <div class="flex space-x-2">
+      <div class="flex justify-between items-start mb-2">
+        <h3 class="text-xl font-bold text-black truncate">${
+          task.title
+        }${notificationIcon}</h3>
+        <div class="flex flex-wrap space-x-2 shrink-0 ml-2">
           <button class="text-gray-500 hover:text-gray-700" onclick="taskController.moveToTop(${
             task.id
           })">
@@ -228,14 +266,14 @@ export class TaskRenderer {
           </button>
         </div>
       </div>
-      <p class="text-gray-600 mb-2">Type: ${task.task_type} | ETA: ${
+      <p class="text-gray-600 mb-2 truncate">Type: ${task.task_type} | ETA: ${
       task.eta_time
     }</p>
-      <p class="text-gray-600 mb-2">Due: ${dueDateText}</p>
-      <p class="text-gray-600 mb-2">Notify: ${
+      <p class="text-gray-600 mb-2 truncate">Due: ${dueDateText}</p>
+      <p class="text-gray-600 mb-2 truncate">Notify: ${
         task.should_notify ? "Yes" : "No"
       }${task.notify_when ? ` (${task.notify_when})` : ""}</p>
-      <div class="flex items-center space-x-2 mb-4">
+      <div class="flex items-center space-x-2 mb-4 flex-wrap">
         <span class="bg-${
           task.status === "Pending"
             ? "yellow"

@@ -10,12 +10,21 @@ export class SidebarManager {
 
     this.currentFilter = "pending"; // Default to pending
 
+    // Initialize sidebar state: collapsed on small screens by default
+    if (window.innerWidth < 768) {
+      // Tailwind 'md' breakpoint
+      this.sidebar.classList.add("hidden");
+    }
+
     if (this.menuToggle) {
       this.menuToggle.addEventListener("click", () => this.toggleSidebar());
     }
 
     this.initEventListeners();
     this.updateSelection(); // Set initial selection
+
+    // Handle window resize to adjust sidebar visibility
+    window.addEventListener("resize", () => this.handleResize());
   }
 
   initEventListeners() {
@@ -75,7 +84,28 @@ export class SidebarManager {
   }
 
   toggleSidebar() {
-    this.sidebar.classList.toggle("active");
+    this.sidebar.classList.toggle("hidden");
+    const icon = this.menuToggle.querySelector("i");
+    if (this.sidebar.classList.contains("hidden")) {
+      icon.classList.replace("fa-angle-left", "fa-angle-right");
+    } else {
+      icon.classList.replace("fa-angle-right", "fa-angle-left");
+    }
+  }
+
+  handleResize() {
+    if (window.innerWidth >= 768) {
+      // On medium+ screens, always show sidebar and hide toggle
+      this.sidebar.classList.remove("hidden");
+      this.menuToggle.classList.add("hidden");
+    } else {
+      // On small screens, collapse sidebar by default and show toggle
+      this.sidebar.classList.add("hidden");
+      this.menuToggle.classList.remove("hidden");
+      const icon = this.menuToggle.querySelector("i");
+      icon.classList.remove("fa-times");
+      icon.classList.add("fa-bars");
+    }
   }
 
   getCurrentFilter() {

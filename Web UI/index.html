@@ -19,7 +19,8 @@
     <div class="flex flex-col md:flex-row min-h-screen">
       <!-- Sidebar -->
       <div
-        class="w-full md:w-1/5 bg-white p-4 text-gray-800 flex flex-col items-center shadow-md h-auto md:h-screen sticky top-0 fade-in z-10"
+        id="sidebar"
+        class="hidden md:flex w-full md:w-1/5 bg-white p-4 text-gray-800 flex-col items-center shadow-md h-auto md:h-screen sticky top-0 fade-in z-10"
       >
         <div class="flex items-center mb-6">
           <i class="fas fa-brain text-blue-600 text-2xl mr-2"></i>
@@ -115,6 +116,13 @@
           <i class="fas fa-sign-out-alt mr-2"></i> Logout
         </button>
       </div>
+      <!-- Floating Expander Button (visible only on small screens) -->
+      <button
+        id="menuToggle"
+        class="fixed top-2 left-1 z-20 bg-gradient-to-r from-blue-600 to-purple-600 text-white text-sm w-6 h-6 flex items-center justify-center rounded-full shadow-md md:hidden"
+      >
+        <i class="fas fa-angle-right"></i>
+      </button>
       <!-- Main Content -->
       <div class="w-full md:w-4/5 p-6 fade-in">
         <!-- Header -->
@@ -470,17 +478,6 @@
           document.getElementById("overlay").classList.add("hidden");
         }
       });
-
-      if ("serviceWorker" in navigator) {
-        navigator.serviceWorker
-          .register("sw.js")
-          .then(() => {
-            console.log("Service Worker registered");
-          })
-          .catch((error) => {
-            console.error("Service Worker registration failed:", error);
-          });
-      }
     </script>
   </body>
 </html>

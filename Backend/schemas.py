@@ -22,18 +22,20 @@ class TaskBase(BaseModel):
     status: str
     due_date: Optional[datetime] = None
     position: Optional[int] = None
-    should_notify: bool = False 
-    notify_when: Optional[str] = None  
+    should_notify: bool = False
+    notify_when: Optional[str] = None
 
     @validator("due_date", pre=True)
     def parse_due_date(cls, value):
         if isinstance(value, str):
-            # Handle extra precision like ":00:00"
             try:
-                return datetime.fromisoformat(value.rstrip(":00"))
+                return datetime.fromisoformat(value)
             except ValueError:
                 raise ValueError("Invalid datetime format")
         return value
+
+class TaskCreate(TaskBase):
+    pass
 
 class TaskCreate(TaskBase):
     pass

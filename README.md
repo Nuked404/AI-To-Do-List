@@ -1,71 +1,132 @@
 # AI Task Manager
 
-A web-based task management application powered by AI to provide personalized task suggestions and motivational messages based on user mood and energy levels.
+A full-stack web application designed to help users manage tasks efficiently with AI-powered suggestions and motivational boosts tailored to their mood and energy levels. This project combines a modern frontend with a robust backend to deliver a seamless user experience.
 
-## Description
+## Features
 
-AI Task Manager is a full-stack application designed to help users organize tasks efficiently. It features a responsive UI built with HTML, Tailwind CSS, and JavaScript, a Flask-based backend for API services, and a MySQL database for data persistence. Key features include task prioritization, mood/energy-based AI suggestions, and a motivational message generator.
+- **Task Management**: Create, edit, delete, and prioritize tasks with due dates and notifications.
+- **AI Suggestions**: Get personalized task recommendations based on mood, energy, and task priority using a local language model.
+- **Motivational Boosts**: Receive uplifting messages to stay motivated, customized to your current state.
+- **Responsive Design**: Works across devices with a dynamic, user-friendly interface.
+- **Notifications**: Browser-based notifications for task reminders using Service Workers.
 
-## Installation
+## Technologies Used
 
-Follow these steps to set up the project locally.
+### Backend
 
-### Prerequisites
+- **FastAPI**: A modern, fast (high-performance) web framework for building APIs with Python.
+- **SQLAlchemy**: ORM for database interactions with MySQL.
+- **Llama.cpp**: For running the local language model (Qwen2.5-7B-Instruct-1M-Q4_K_M.gguf).
+- **Passlib**: For secure password hashing with bcrypt.
+- **MySQL**: Relational database for storing user data, tasks, and suggestions.
 
-- Python 3.8 or higher
-- MySQL 8.0 or higher
-- Node.js (optional, for development tools like live server)
-- Git
+### Frontend
 
-### Backend Setup
+- **JavaScript (ES6+)**: Modular architecture with dynamic DOM manipulation.
+- **HTML5 & CSS3**: Structured content with custom styles (initially scaffolded with Tailwind CSS, now fully custom-generated dynamically).
+- **Service Workers**: For offline capabilities and push notifications.
+- **FontAwesome**: Icons for enhanced UI.
 
-1. **Clone the Repository**
-   ```
-   git clone https://github.com/yourusername/ai-task-manager.git
-   cd ai-task-manager
-   ```
+### Other Tools
 
-2. **Set Up Virtual Environment**
-   ```
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
+- **Python 3.9+**: Backend runtime.
+- **MySQL Connector**: For database connectivity.
 
-3. **Install Python Requirements**
-   Install the required packages listed in `requirements.txt`:
-   ```
+## Prerequisites
+
+- **Python 3.9+**: For running the backend.
+- **MySQL**: For the database (version 8.0+ recommended).
+- **Node.js & npm**: Optional, for frontend development with a live server.
+- **XAMPP / Live Server**: Optional, for hosting the frontend locally.
+- **Git**: For cloning the repository.
+
+## Setup Instructions
+
+### 1. Clone the Repository
+
+```bash###bash
+git clone https://github.com/yourusername/ai-task-manager.git
+cd ai-task-manager
+```
+
+### 2. Backend Setup
+
+1. **Install Dependencies**:
+   ```bash
    pip install -r Backend/requirements.txt
    ```
-   Example `requirements.txt` contents:
-   ```
-   Flask==2.3.2
-   Flask-Cors==3.0.10
-   mysql-connector-python==8.0.33
+2. **Configure Database**:
+   - Update the `SQLALCHEMY_DATABASE_URL` in `Backend/database.py` with your MySQL credentials:
+     ```python
+     SQLALCHEMY_DATABASE_URL = "mysql+mysqlconnector://<username>:<password>@localhost/ai_task_manager_db"
+     ```
+     Default: `root:12345@localhost/ai_task_manager_db`.
+3. **Import Database Schema**:
+   - Import the SQL file into your MySQL database:
+     ```bash
+     mysql -u <username> -p ai_task_manager_db < ai_task_manager_db.sql
+     ```
+4. **Language Model**:
+   - **Note**: The AI model (`Qwen2.5-7B-Instruct-1M-Q4_K_M.gguf`) is not included in this repository due to its size. It will be added in the future or can be downloaded separately from [Hugging Face](https://huggingface.co/models) or a similar source. Place it in `Backend/models/`.
+5. **Run the Backend**:
+   ```bash
+   uvicorn Backend.main:app --reload --host 0.0.0.0 --port 8000
    ```
 
-4. **SQL Database Setup**
-   - Install MySQL if not already installed:
+### 3. Frontend Setup
+
+1. **Serve the Frontend**:
+   - **Option 1: XAMPP**: Place the `Web UI` folder in `htdocs` and access via `http://localhost/Web UI/`.
+   - **Option 2: Live Server**: Use VS Code’s Live Server extension or a similar tool:
+     ```bash
+     npx live-server Web\ UI
      ```
-     # On Ubuntu: sudo apt-get install mysql-server
-     # On macOS: brew install mysql
-     # On Windows: Download from https://dev.mysql.com/downloads/
+   - **Option 3: npm**: Install a simple server:
+     ```bash
+     npm install -g serve
+     serve Web\ UI
      ```
-   - Start the MySQL server:
+2. **Update API Base URL** (if needed):
+   - Edit `Web UI/Scripts/Config.js` if your backend is not running on `https://192.168.1.139:8000`:
+     ```javascript
+     export const API_BASE_URL = "http://localhost:8000";
      ```
-     sudo service mysql start  # On Ubuntu
-     mysql.server start        # On macOS
-     ```
-   - Create a database and user:
-     ```
-     mysql -u root -p
-     CREATE DATABASE ai_task_manager;
-     CREATE USER 'task_user'@'localhost' IDENTIFIED BY 'your_password';
-     GRANT ALL PRIVILEGES ON ai_task_manager.* TO 'task_user'@'localhost';
-     FLUSH PRIVILEGES;
-     EXIT;
-     ```
-   - Import the schema:
-     ```
-     mysql -u task_user -p ai_task_manager < Backend/schema.sql
-     ```
-     Ensure `schema.sql` contains your table definitions (e.g., `users`, `tasks`, `user_data`).
+
+### 4. Access the Application
+
+- Open your browser and navigate to `http://localhost:<frontend-port>` (e.g., `http://localhost:3000` for `serve`).
+
+## Configuration Files to Adjust
+
+- **Backend**:
+  - `Backend/database.py`: Update database connection string.
+- **Frontend**:
+  - `Web UI/Scripts/Config.js`: Update `API_BASE_URL` if backend host/port changes.
+
+## Usage
+
+1. **Register**: Go to `/register.html` to create an account.
+2. **Login**: Use `/login.html` to access the dashboard.
+3. **Manage Tasks**: Add, edit, or delete tasks from the main interface.
+4. **AI Features**: Set your mood and energy, then click "Get Suggestions" or "Get Motivation".
+
+## Notes
+
+- The frontend CSS was initially built with Tailwind CSS but is now dynamically generated for flexibility—no Tailwind dependency remains.
+- Ensure your system has sufficient resources (e.g., 16GB RAM Or 8GB VRAM for GPU inference) to run the language model locally.
+
+## Future Improvements
+
+- Add authentication tokens for secure API access.
+- Include the language model in the repository or provide a download script.
+- Enhance notification system with sound or custom timings.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). See the LICENSE file for details.
+
+## Acknowledgments
+
+- [FastAPI](https://fastapi.tiangolo.com/) for the backend framework.
+- [Llama.cpp](https://github.com/ggerganov/llama.cpp) for local LLM inference.
+- [FontAwesome](https://fontawesome.com/) for icons.

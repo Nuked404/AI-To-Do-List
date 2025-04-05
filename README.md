@@ -45,7 +45,7 @@ A full-stack web application designed to help users manage tasks efficiently wit
 ### 1. Clone the Repository
 
 ```bash###bash
-git clone https://github.com/yourusername/ai-task-manager.git
+git clone https://github.com/Nuked404/ai-task-manager.git
 cd ai-task-manager
 ```
 

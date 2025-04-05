@@ -44,18 +44,50 @@ export class NotificationManager {
 
   setRangNotification(taskId, timestamp) {
     const rangNotifications = this.getRangNotifications();
-    rangNotifications[taskId] = timestamp;
+    rangNotifications[taskId] =
+      timestamp instanceof Date ? timestamp.toISOString() : timestamp;
     localStorage.setItem(
       this.rangNotificationsKey,
       JSON.stringify(rangNotifications)
     );
+    // Dispatch custom event to notify UI of update
+    const event = new CustomEvent("notificationRang", { detail: { taskId } });
+    window.dispatchEvent(event);
   }
 
   hasRang(taskId, dueDate) {
     const rangNotifications = this.getRangNotifications();
     const rangTime = rangNotifications[taskId];
     if (!rangTime) return false;
-    return new Date(rangTime).toISOString() === new Date(dueDate).toISOString();
+
+    try {
+      const rangDate = new Date(rangTime);
+      const due = dueDate ? new Date(dueDate) : null;
+      if (isNaN(rangDate.getTime()) || (due && isNaN(due.getTime()))) {
+        return false;
+      }
+      return due ? rangDate.toISOString() === due.toISOString() : false;
+    } catch (error) {
+      console.warn(`Invalid date detected for task ${taskId}:`, error);
+      return false;
+    }
+  }
+
+  resetRangStatus(taskId) {
+    const rangNotifications = this.getRangNotifications();
+    if (taskId in rangNotifications) {
+      delete rangNotifications[taskId];
+      localStorage.setItem(
+        this.rangNotificationsKey,
+        JSON.stringify(rangNotifications)
+      );
+      console.log(`Rang status reset for task ${taskId}`);
+      // Dispatch event to update UI
+      const event = new CustomEvent("notificationReset", {
+        detail: { taskId },
+      });
+      window.dispatchEvent(event);
+    }
   }
 
   clearRangNotifications() {
@@ -64,6 +96,8 @@ export class NotificationManager {
 
   checkTasksForNotifications() {
     const now = new Date();
+    const catchUpWindow = 5 * 60 * 1000; // 5 minutes in milliseconds
+
     this.taskManager.tasks.forEach((task) => {
       if (
         !task.should_notify ||
@@ -73,7 +107,20 @@ export class NotificationManager {
       )
         return;
 
-      const dueDate = new Date(task.due_date);
+      let dueDate;
+      try {
+        dueDate = new Date(task.due_date);
+        if (isNaN(dueDate.getTime())) {
+          console.warn(
+            `Invalid due_date for task ${task.id}: ${task.due_date}`
+          );
+          return;
+        }
+      } catch (error) {
+        console.warn(`Error parsing due_date for task ${task.id}:`, error);
+        return;
+      }
+
       let notifyTime = dueDate;
 
       switch (task.notify_when) {
@@ -93,10 +140,12 @@ export class NotificationManager {
       }
 
       const timeDiff = notifyTime - now;
-      if (timeDiff > 0 && timeDiff <= 1000) {
-        // Within the next second
+      if (
+        (timeDiff > 0 && timeDiff <= 1000) ||
+        (timeDiff <= 0 && timeDiff >= -catchUpWindow)
+      ) {
         this.showNotification(task);
-        this.setRangNotification(task.id, notifyTime.toISOString());
+        this.setRangNotification(task.id, notifyTime);
       }
     });
   }
@@ -106,14 +155,12 @@ export class NotificationManager {
       Notification.permission === "granted" &&
       this.serviceWorkerRegistration
     ) {
+      const dueDate = new Date(task.due_date);
       const notificationOptions = {
-        body: `Due: ${new Date(task.due_date).toLocaleString()} | ${
-          task.notify_when || "Now"
-        }`,
+        body: `Due: ${dueDate.toLocaleString()} | ${task.notify_when || "Now"}`,
         icon: "Images/icon-192.png",
-        data: { taskId: task.id }, // Pass task ID for potential click handling
+        data: { taskId: task.id },
       };
-      // Send message to Service Worker to show notification
       navigator.serviceWorker.controller?.postMessage({
         type: "SHOW_NOTIFICATION",
         title: `Task Reminder: ${task.title}`,

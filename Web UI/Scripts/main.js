@@ -19,11 +19,10 @@ const taskController = new TaskController(
 );
 const notificationManager = new NotificationManager(taskManager);
 
-// Update TaskRenderer with sidebarManager after instantiation
 taskRenderer.sidebarManager = sidebarManager;
-
 window.taskController = taskController;
 window.taskRenderer = taskRenderer;
+window.notificationManager = notificationManager; // Expose globally
 
 new AISuggestionManager();
 new UserManager();

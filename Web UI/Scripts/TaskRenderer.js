@@ -31,7 +31,16 @@ export class TaskRenderer {
         "hideEmptyCategories",
         this.hideEmptyCheckbox.checked
       );
+      this.render();
     });
+
+    // Listen for notification events
+    window.addEventListener("notificationRang", (event) =>
+      this.updateTaskCard(event.detail.taskId)
+    );
+    window.addEventListener("notificationReset", (event) =>
+      this.updateTaskCard(event.detail.taskId)
+    );
   }
 
   render() {
@@ -45,7 +54,6 @@ export class TaskRenderer {
     let filteredTasks = this.taskManager.tasks;
     const filter = this.sidebarManager.getCurrentFilter();
 
-    // Apply filter
     switch (filter) {
       case "pending":
         filteredTasks = this.taskManager.tasks.filter(
@@ -68,11 +76,10 @@ export class TaskRenderer {
       default:
         filteredTasks = this.taskManager.tasks.filter(
           (t) => t.status === "Pending"
-        ); // Default to pending
+        );
         break;
     }
 
-    // Update navbar counts (based on all tasks, not filtered)
     this.pendingCountElement.textContent = this.taskManager.tasks.filter(
       (t) => t.status === "Pending"
     ).length;
@@ -93,7 +100,6 @@ export class TaskRenderer {
 
     const hideEmpty = this.hideEmptyCheckbox.checked;
 
-    // Initially hide all sections
     this.criticalSectionHeader.style.display = "none";
     this.criticalTasksElement.style.display = "none";
     this.highSectionHeader.style.display = "none";
@@ -104,7 +110,6 @@ export class TaskRenderer {
     this.lowTasksElement.style.display = "none";
     this.taskSectionsElement.style.display = "none";
 
-    // Render each section with filtered tasks
     this.renderSection(
       criticalTasks,
       this.criticalSectionHeader,
@@ -134,7 +139,6 @@ export class TaskRenderer {
       hideEmpty
     );
 
-    // Show task sections container if there are any filtered tasks or if not hiding empty sections
     if (filteredTasks.length > 0 || !hideEmpty) {
       this.taskSectionsElement.style.display = "block";
     }
@@ -150,7 +154,6 @@ export class TaskRenderer {
     if (tasks.length > 0) {
       headerElement.style.display = "flex";
       taskListElement.style.display = "grid";
-      // Use Tailwind grid classes: 1 column on small screens, 2 on md+
       taskListElement.classList.remove(
         "flex",
         "flex-col",
@@ -165,7 +168,7 @@ export class TaskRenderer {
         "md:grid-cols-2",
         "gap-4"
       );
-      taskListElement.innerHTML = ""; // Clear existing content
+      taskListElement.innerHTML = "";
       tasks.forEach((task) => {
         taskListElement.appendChild(this.createTaskCard(task));
       });
@@ -198,15 +201,15 @@ export class TaskRenderer {
 
   createTaskCard(task) {
     const taskCard = document.createElement("div");
-    // Remove md:w-1/2, let grid handle width; add min-w-0 to prevent overflow
     taskCard.classList.add(
       "bg-white",
       "p-4",
       "rounded-lg",
       "shadow-md",
       "w-full",
-      "min-w-0" // Prevents card from growing beyond container
+      "min-w-0"
     );
+    taskCard.dataset.taskId = task.id; // Add task ID for easy lookup
 
     let dueDateText = "No due date";
     if (task.due_date) {
@@ -222,8 +225,16 @@ export class TaskRenderer {
       dueDateText = dueDate.toLocaleString("en-US", options).replace(",", "");
     }
 
+    const hasRang =
+      window.notificationManager &&
+      window.notificationManager.hasRang(task.id, task.due_date);
+    const bellColor = hasRang ? "text-red-500" : "text-yellow-500";
     const notificationIcon = task.should_notify
-      ? `<i class="fas fa-bell text-yellow-500 ml-2" title="Notification scheduled"></i>`
+      ? `<i class="fas fa-bell ${bellColor} ml-2 cursor-pointer" title="Notification ${
+          hasRang ? "has rung" : "scheduled"
+        }" onclick="window.notificationManager.resetRangStatus(${
+          task.id
+        });"></i>`
       : "";
 
     taskCard.innerHTML = `
@@ -304,5 +315,24 @@ export class TaskRenderer {
       </div>
     `;
     return taskCard;
+  }
+
+  updateTaskCard(taskId) {
+    const taskCard = document.querySelector(`div[data-task-id="${taskId}"]`);
+    if (!taskCard) return;
+
+    const task = this.taskManager.tasks.find((t) => t.id === taskId);
+    if (!task) return;
+
+    const hasRang =
+      window.notificationManager &&
+      window.notificationManager.hasRang(task.id, task.due_date);
+    const bellColor = hasRang ? "text-red-500" : "text-yellow-500";
+    const bellIcon = taskCard.querySelector(".fa-bell");
+    if (bellIcon) {
+      bellIcon.classList.remove("text-red-500", "text-yellow-500");
+      bellIcon.classList.add(bellColor);
+      bellIcon.title = `Notification ${hasRang ? "has rung" : "scheduled"}`;
+    }
   }
 }

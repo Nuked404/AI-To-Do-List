@@ -34,7 +34,6 @@ export class TaskRenderer {
       this.render();
     });
 
-    // Listen for notification events
     window.addEventListener("notificationRang", (event) =>
       this.updateTaskCard(event.detail.taskId)
     );
@@ -209,7 +208,7 @@ export class TaskRenderer {
       "w-full",
       "min-w-0"
     );
-    taskCard.dataset.taskId = task.id; // Add task ID for easy lookup
+    taskCard.dataset.taskId = task.id;
 
     let dueDateText = "No due date";
     if (task.due_date) {
@@ -238,11 +237,15 @@ export class TaskRenderer {
       : "";
 
     taskCard.innerHTML = `
-      <div class="flex justify-between items-start mb-2">
-        <h3 class="text-xl font-bold text-black truncate">${
-          task.title
-        }${notificationIcon}</h3>
-        <div class="flex flex-wrap space-x-2 shrink-0 ml-2">
+      <div class="flex flex-col space-y-2 md:flex-row md:items-start md:space-y-0 md:space-x-4">
+        <!-- Title and Bell (Left on large screens, centered on small) -->
+        <div class="flex items-center justify-center md:justify-start flex-1 min-w-0">
+          <h3 class="text-xl font-bold text-black truncate">${
+            task.title
+          }${notificationIcon}</h3>
+        </div>
+        <!-- Buttons (Right on large screens, centered on small) -->
+        <div class="flex flex-wrap justify-center md:justify-end space-x-2 shrink-0">
           <button class="text-gray-500 hover:text-gray-700" onclick="taskController.moveToTop(${
             task.id
           })">
@@ -277,41 +280,44 @@ export class TaskRenderer {
           </button>
         </div>
       </div>
-      <p class="text-gray-600 mb-2 truncate">Type: ${task.task_type} | ETA: ${
+      <!-- Details (Below on all screens) -->
+      <div class="space-y-2 mt-2">
+        <p class="text-gray-600 truncate">Type: ${task.task_type} | ETA: ${
       task.eta_time
     }</p>
-      <p class="text-gray-600 mb-2 truncate">Due: ${dueDateText}</p>
-      <p class="text-gray-600 mb-2 truncate">Notify: ${
-        task.should_notify ? "Yes" : "No"
-      }${task.notify_when ? ` (${task.notify_when})` : ""}</p>
-      <div class="flex items-center space-x-2 mb-4 flex-wrap">
-        <span class="bg-${
-          task.status === "Pending"
-            ? "yellow"
-            : task.status === "Ongoing"
-            ? "blue"
-            : "green"
-        }-100 text-${
+        <p class="text-gray-600 truncate">Due: ${dueDateText}</p>
+        <p class="text-gray-600 truncate">Notify: ${
+          task.should_notify ? "Yes" : "No"
+        }${task.notify_when ? ` (${task.notify_when})` : ""}</p>
+        <div class="flex items-center justify-center md:justify-start space-x-2 flex-wrap">
+          <span class="bg-${
+            task.status === "Pending"
+              ? "yellow"
+              : task.status === "Ongoing"
+              ? "blue"
+              : "green"
+          }-100 text-${
       task.status === "Pending"
         ? "yellow"
         : task.status === "Ongoing"
         ? "blue"
         : "green"
     }-600 px-2 py-1 rounded-full">${task.status}</span>
-        <button class="bg-${
-          task.status === "Completed" ? "red" : "green"
-        }-100 text-${
+          <button class="bg-${
+            task.status === "Completed" ? "red" : "green"
+          }-100 text-${
       task.status === "Completed" ? "red" : "green"
     }-600 px-2 py-1 rounded-full hover:bg-${
       task.status === "Completed" ? "red" : "green"
     }-200 flex items-center" onclick="taskController.toggleComplete(${
       task.id
     })">
-          <i class="fas fa-${
-            task.status === "Completed" ? "undo" : "check"
-          } mr-1"></i>
-          ${task.status === "Completed" ? "Mark Incomplete" : "Complete"}
-        </button>
+            <i class="fas fa-${
+              task.status === "Completed" ? "undo" : "check"
+            } mr-1"></i>
+            ${task.status === "Completed" ? "Mark Incomplete" : "Complete"}
+          </button>
+        </div>
       </div>
     `;
     return taskCard;

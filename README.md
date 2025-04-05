@@ -123,7 +123,7 @@ cd AI-To-Do-List
 
 ## License
 
-This project is licensed under the [MIT License](LICENSE). See the LICENSE file for details.
+This project is licensed under the [MIT License](LICENSE.md). See the LICENSE file for details.
 
 ## Acknowledgments
 

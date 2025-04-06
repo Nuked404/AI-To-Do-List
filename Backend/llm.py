@@ -65,8 +65,8 @@ def generate_suggestions(tasks: list, mood, energy) -> dict:
         "Write friendly, simple explanations for each suggestion that anyone can understand.\n"
         "Return a single, valid JSON object with no extra text:\n"
         "{\n"
-        '    "main_suggestion": "Task title - why it fits their mood, energy, and schedule (No Due time calculations or numbers)",\n'
-        '    "alternative_suggestion": "Task title - why it’s a good backup choice (No Due time calculations or numbers)"\n'
+        '    "main_suggestion": "Task title - why it fits their mood, energy, and schedule (Elaorate how doing this task benefits the user) (No Due time calculations or numbers) (Priorotize Critical tasks and give higher priority for overdue)",\n'
+        '    "alternative_suggestion": "Task title - why it’s a good backup choice (Elaorate how doing this task benefits the user) (No Due time calculations or numbers)"\n'
         "}\n"
     )
     print(f"Prompt sent to LLM: {prompt}")

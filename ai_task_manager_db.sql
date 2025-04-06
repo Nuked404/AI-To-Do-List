@@ -43,3 +43,14 @@ CREATE TABLE `user_data` (
   KEY `idx_user_data_owner` (`Owner_ID`),
   CONSTRAINT `user_data_ibfk_1` FOREIGN KEY (`Owner_ID`) REFERENCES `user` (`ID`) ON DELETE CASCADE
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `otp` (
+  `ID` int NOT NULL AUTO_INCREMENT,
+  `User_ID` int NOT NULL,
+  `OTP_Code` varchar(6) NOT NULL,
+  `Purpose` enum('Registration','PasswordReset') NOT NULL,
+  `Created_At` datetime DEFAULT CURRENT_TIMESTAMP,
+  `Expires_At` datetime NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `idx_otp_user` (`User_ID`),
+  CONSTRAINT `otp_ibfk_1` FOREIGN KEY (`User_ID`) REFERENCES `user` (`ID`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

@@ -81,3 +81,28 @@ class Suggestion(SuggestionBase):
 class UserLogin(BaseModel):
     email: str
     password: str
+    
+class OTPCreate(BaseModel):
+    user_id: int
+    otp_code: str
+    purpose: str
+    expires_at: datetime
+
+class OTP(BaseModel):
+    id: int
+    user_id: int
+    otp_code: str
+    purpose: str
+    created_at: datetime
+    expires_at: datetime
+    class Config:
+        from_attributes = True
+
+class OTPRequest(BaseModel):
+    email: str
+    purpose: str
+
+class OTPVerify(BaseModel):
+    email: str
+    otp_code: str
+    purpose: str

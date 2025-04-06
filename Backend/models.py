@@ -74,3 +74,19 @@ class Suggestion(Base):
     current_suggestion = Column(Text, nullable=False)  # Changed to Text
     current_alternative_suggestion = Column(Text, nullable=False)  # Changed to Text
     current_moti_message = Column(Text, nullable=False)  # Changed to Text
+    
+class OTPPurposeEnum(enum.Enum):
+    REGISTRATION = "Registration"
+    PASSWORD_RESET = "PasswordReset"
+
+class OTP(Base):
+    __tablename__ = "otp"
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
+    otp_code = Column(String(6), nullable=False)
+    purpose = Column(
+        Enum(OTPPurposeEnum, name="otppurposeenum", create_constraint=True, values_callable=lambda x: [e.value for e in x]),
+        nullable=False
+    )
+    created_at = Column(DateTime, default=func.now())
+    expires_at = Column(DateTime, nullable=False)

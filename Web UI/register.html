@@ -23,50 +23,68 @@
             Register for AI Task Manager
           </h2>
         </div>
-        <form id="registerForm" class="space-y-4">
-          <div>
-            <input
-              type="text"
-              id="registerUsername"
-              placeholder="Username"
-              class="w-full p-2 rounded border border-gray-300 bg-white bg-opacity-10 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              required
-            />
-          </div>
-          <div>
-            <input
-              type="email"
-              id="registerEmail"
-              placeholder="Email"
-              class="w-full p-2 rounded border border-gray-300 bg-white bg-opacity-10 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              required
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              id="registerPassword"
-              placeholder="Password"
-              class="w-full p-2 rounded border border-gray-300 bg-white bg-opacity-10 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              required
-            />
-          </div>
-          <div>
-            <input
-              type="password"
-              id="registerConfirmPassword"
-              placeholder="Confirm Password"
-              class="w-full p-2 rounded border border-gray-300 bg-white bg-opacity-10 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
-              required
-            />
-          </div>
+        <div id="formSection">
+          <form id="registerForm" class="space-y-4">
+            <div>
+              <input
+                type="text"
+                id="registerUsername"
+                placeholder="Username"
+                class="w-full p-2 rounded border border-gray-300 bg-white bg-opacity-10 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="email"
+                id="registerEmail"
+                placeholder="Email"
+                class="w-full p-2 rounded border border-gray-300 bg-white bg-opacity-10 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                id="registerPassword"
+                placeholder="Password"
+                class="w-full p-2 rounded border border-gray-300 bg-white bg-opacity-10 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                required
+              />
+            </div>
+            <div>
+              <input
+                type="password"
+                id="registerConfirmPassword"
+                placeholder="Confirm Password"
+                class="w-full p-2 rounded border border-gray-300 bg-white bg-opacity-10 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="w-full text-white px-4 py-2 rounded bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 flex items-center justify-center"
+            >
+              <i class="fas fa-envelope mr-2"></i> Request OTP
+            </button>
+          </form>
+        </div>
+        <div id="otpSection" class="space-y-4 hidden mt-4">
+          <!-- Added mt-4 here -->
+          <input
+            type="text"
+            id="otpCode"
+            placeholder="Enter OTP"
+            class="w-full p-2 rounded border border-gray-300 bg-white bg-opacity-10 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-400"
+            required
+          />
           <button
-            type="submit"
+            id="verifyOtpBtn"
             class="w-full text-white px-4 py-2 rounded bg-gradient-to-r from-purple-400 to-pink-400 hover:from-purple-500 hover:to-pink-500 flex items-center justify-center"
           >
-            <i class="fas fa-user-plus mr-2"></i> Register
+            <i class="fas fa-check mr-2"></i> Verify OTP
           </button>
-        </form>
+        </div>
         <p class="text-center text-gray-600 mt-4">
           Already have an account?
           <a href="login.html" class="text-purple-600 hover:underline">Login</a>
